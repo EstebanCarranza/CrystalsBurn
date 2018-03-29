@@ -29,7 +29,7 @@ function cargar_cajas()
 		isWorldReady[0] = true;
 	});
 }
-function cargar_carro()
+function cargar_carro(screenID)
 {
     
     loadOBJWithMTL("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", (object) => {
@@ -40,9 +40,11 @@ function cargar_carro()
         
         object.position.z = 0;
         object.rotation.y += THREE.Math.degToRad(90);
-        object.name= "carroX";
+		object.name= "carroX";
+		
+		camPlayers[screenID].add(object);
+       // scene.add(object);
         
-        scene.add(object);
         //object.add(camara);
         isWorldReady[1] = true;
 

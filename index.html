@@ -16,7 +16,7 @@
 	var renderer;
     var viewports = [];
     var camPlayers = [];
-    var players = 1;
+    var players = 4;
 	var controls;
 	var objects = [];
 	var clock;
@@ -32,7 +32,8 @@
 	$(document).ready(function() {
 
 		//setupScene(1, "scene-section");
-        setupSceneForViewport(0, "scene-section-01",  10,   5,  10);
+		setupSceneForViewport(0, "scene-section-01",  0,   5,  0);
+		
         if(players >= 2)
         setupSceneForViewport(1, "scene-section-02",  10,   5, -10);
         if(players >= 3)
@@ -54,7 +55,7 @@
 		raycaster = new THREE.Raycaster();
 		
 		cargar_cajas();
-		cargar_carro();
+		cargar_carro(0);
       
         //alert("OK");
 		render();
@@ -163,6 +164,9 @@
 				camPlayers[i].translateZ(forward[i] * deltaTime);
 				camPlayers[i].translateX(leftRight[i]);
 			}
+
+			
+
             /*
             camPlayers[0].lookAt(car.position);
             car.rotation.y += (yaw * deltaTime);
@@ -261,7 +265,7 @@
 		var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
 		grid.position.y = -1;
 		scene.add(grid);
-
+		scene.add(camPlayers[0]);
        
 
 		$("#" + objectID).append(viewports[screenID].domElement);
