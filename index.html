@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="js/libs/three/MTLLoader.js"></script>
 	<script type="text/javascript" src="js/libs/three/OBJLoader.js"></script>
 	<script type="text/javascript" src="js/functions/util.js"></script>
+	<script type="text/javascript" src="js/functions/gamepad.js"></script>
 	<script type="text/javascript" src="js/class/modelos.js"></script>
 	<script type="text/javascript" src="js/class/player.js"></script>
 	<script type="text/javascript">
@@ -29,7 +30,11 @@
 	var jugadorX;
 	
 	
+
 	$(document).ready(function() {
+
+		enableGamepads();
+
 
 		//setupScene(1, "scene-section");
 		setupSceneForViewport(0, "scene-section-01",  0,   5,  0);
@@ -67,7 +72,9 @@
 	
 
 	function onKeyDown(event) {
+		
 		keys[String.fromCharCode(event.keyCode)] = true;
+		
 	}
 	function onKeyUp(event) {
 		keys[String.fromCharCode(event.keyCode)] = false;
@@ -120,7 +127,7 @@
 	}
 
 	function render() {
-        $("#test-00").text(ValidateAllLoadedModels(isWorldReady) );
+       // $("#test-00").text(ValidateAllLoadedModels(isWorldReady) );
 		requestAnimationFrame(render);
         //debugger;
 		deltaTime = clock.getDelta();	
@@ -278,7 +285,6 @@
 
 <body>
 
-	
 
     <div id="test-00" style='color:white;'>Crystal Burns</div>
     <span class='scene' id="scene-section-01">
