@@ -1,282 +1,283 @@
 <html>
+
 <head>
-	
-    <title>Crystals Burns</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+	<title>Crystals Burns</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="js/libs/three/three.js"></script>
 	<script type="text/javascript" src="js/libs/three/MTLLoader.js"></script>
 	<script type="text/javascript" src="js/libs/three/OBJLoader.js"></script>
 	<script type="text/javascript" src="js/functions/util.js"></script>
+	<script type="text/javascript" src="js/class/player.js"></script>
 	<script type="text/javascript" src="js/functions/gamepad.js"></script>
 	<script type="text/javascript" src="js/class/modelos.js"></script>
-	<script type="text/javascript" src="js/class/player.js"></script>
+	<script type="text/javascript" src="js/class/autos.js"></script>
+
+	
 	<script type="text/javascript">
 
-	var scene;
-	var renderer;
-    var viewports = [];
-    var camPlayers = [];
-    var players = 4;
-	var controls;
-	var objects = [];
-	var clock;
-	var deltaTime;	
-	var keys = {};
-	var isWorldReady = [];
-	var cajaX = [];
-	var raycaster;
-	var objetosConColision = [];
-	var jugadorX;
-	
-	
+		var scene;
+		var renderer;
+		//var viewports = [];
+		//var camPlayers = [];
+		var players = 4;
+		var clock;
+		var deltaTime;
+		var keys = {};
+		var isWorldReady = [];
+		var cajaX = [];
+		var raycaster;
+		var objetosConColision = [];
+		var jugador = [];
 
-	$(document).ready(function() {
+		//Jugador(id, forwardLimit, yawLimit, leftRightLimit, spectatorPos, spectatorScl, spectatorRot)
+		jugador[0] = new Jugador(0, 50, 1, 0.1, 
+					new THREE.Vector3(0, -10, -25), 
+					new THREE.Vector3(0.1, 0.1, 0.1),
+					new THREE.Vector3(0, THREE.Math.degToRad(180), 0));
 
-		enableGamepads();
+		jugador[1] = new Jugador(1, 50, 1, 0.1, 
+					new THREE.Vector3(0, -10, -25), 
+					new THREE.Vector3(0.001, 0.001, 0.001),
+					new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
+
+		jugador[2] = new Jugador(2, 50, 1, 0.1, 
+					new THREE.Vector3(0, -10, -25), 
+					new THREE.Vector3(0.01, 0.01, 0.01),
+					new THREE.Vector3(0, 0, 0));
+
+		jugador[3] = new Jugador(3, 50, 1, 0.1, 
+					new THREE.Vector3(0, -10, -25), 
+					new THREE.Vector3(0.01, 0.01, 0.01),
+					new THREE.Vector3(0, 0, 0));
+
+		var bmw;
+
+		function init() {
+			//carpeta, OBJ, MTL, player
+			new auto("assets/portalturret/", "portalturret.obj", "portalturret.mtl", jugador[0]);
+			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[1]);
+			new auto("assets/portalturret/", "portalturret.obj", "portalturret.mtl", jugador[2]);
+			new auto("assets/portalturret/", "portalturret.obj", "portalturret.mtl", jugador[3]);
+			//jugador[1].modelo = bmw;
+			//scene.add(jugador[1].modelo);
+			//jugador[1].camPlayer.add(jugador[1].modelo);
+
+		}
+		$(document).ready(function () {
+			$("#empezarJuego").attr("disabled",true);
+			$("#empezarJuego").click(function()
+			{
+				$(this).parent().parent().remove();
+			});
+			enableGamepads();
+
+			//setupScene(1, "scene-section");
+			setupSceneForViewport(0, "scene-section-01", 10, 10, 10);
+
+			if (players >= 2)
+				setupSceneForViewport(1, "scene-section-02", 10, 10, -10);
+			if (players >= 3)
+				setupSceneForViewport(2, "scene-section-03", -10, 10, 10);
+
+			//jugadorX = new Jugador(3, -10, 5, -10);
+
+			if (players >= 4)
+				setupSceneForViewport(3, "scene-section-04", -10, 10, -10);
+
+			cargar_cajas();
+			//cargar_carro(0, jugador[0]);
+			init();
+
+			//alert("OK");
+			render();
+
+			document.addEventListener('keydown', onKeyDown);
+			document.addEventListener('keyup', onKeyUp);
+		});
 
 
-		//setupScene(1, "scene-section");
-		setupSceneForViewport(0, "scene-section-01",  0,   5,  0);
-		
-        if(players >= 2)
-        setupSceneForViewport(1, "scene-section-02",  10,   5, -10);
-        if(players >= 3)
-		setupSceneForViewport(2, "scene-section-03", -10,   5,  10);
-		
-		//jugadorX = new Jugador(3, -10, 5, -10);
-		
-		if(players >= 4)
-        setupSceneForViewport(3, "scene-section-04", -10,   5, -10);
-        
-		camPlayers[0].rayos = 
-		[
-			new THREE.Vector3( 1,  0,  0),
-			new THREE.Vector3(-1,  0,  0),
-			new THREE.Vector3( 0,  0,  1),
-			new THREE.Vector3( 0,  0, -1)
-		];
 
-		raycaster = new THREE.Raycaster();
-		
-		cargar_cajas();
-		cargar_carro(0);
-      
-        //alert("OK");
-		render();
+		function onKeyDown(event) {
 
-		document.addEventListener('keydown', onKeyDown);
-		document.addEventListener('keyup', onKeyUp);		
-	});
+			keys[String.fromCharCode(event.keyCode)] = true;
 
-	
-
-	function onKeyDown(event) {
-		
-		keys[String.fromCharCode(event.keyCode)] = true;
-		
-	}
-	function onKeyUp(event) {
-		keys[String.fromCharCode(event.keyCode)] = false;
-	}
-
-	var camPosition = "";
-    var carPosition = "";
-	
-	var yaw = [];
-	var forward = [];
-    var leftRight = [];
-	function keysPlayers()
-	{
-		
-		for(var i= 0; i < players; i++)
-		{
-			yaw[i] = 0;
-			forward[i] = 0;
-			leftRight[i] = 0;
+		}
+		function onKeyUp(event) {
+			keys[String.fromCharCode(event.keyCode)] = false;
 		}
 
-		if (keys["A"])  { yaw[0] = 1; } 			else if (keys["D"]) 	{ yaw[0] = -1; }
-		if (keys["W"])  { forward[0] = -20; } 		else if (keys["S"])  	{ forward[0] = 20; } 
-		if (keys["Q"])  { leftRight[0] = -0.1; } 	else if (keys["E"]) 	{ leftRight[0] = 0.1; }
-		
-		if (keys["F"])  { yaw[1] = 1; } 			else if (keys["H"]) 	{ yaw[1] = -1; }
-		if (keys["T"])  { forward[1] = -20; } 		else if (keys["G"])  	{ forward[1] = 20; } 
-		if (keys["R"])  { leftRight[1] = -0.1; } 	else if (keys["Y"]) 	{ leftRight[1] = 0.1; }
+		var camPosition = "";
+		var carPosition = "";
 
-		if (keys["J"])  { yaw[2] = 1; } 			else if (keys["L"]) 	{ yaw[2] = -1; }
-		if (keys["I"])  { forward[2] = -20; } 		else if (keys["K"])  	{ forward[2] = 20; } 
-		if (keys["U"])  { leftRight[2] = -0.1; } 	else if (keys["O"]) 	{ leftRight[2] = 0.1; }
-		
-		if (keys["1"])  { yaw[3] = 1; } 			else if (keys["2"]) 	{ yaw[3] = -1; }
-		if (keys["3"])  { forward[3] = -20; } 		else if (keys["4"])  	{ forward[3] = 20; } 
-		if (keys["5"])  { leftRight[3] = -0.1; } 	else if (keys["6"]) 	{ leftRight[3] = 0.1; }
-		
-	}
 
-	function ValidateAllLoadedModels(isWorldReadyLocal)
-	{
-		var complete = true;
-		for(var i = 0; i < isWorldReadyLocal.length; i++)
-			complete = complete * isWorldReadyLocal[i];
-		
-		if(!complete)
-			alert("Cuidado, hay modelos que no cargaron!");
+		function ValidateAllLoadedModels(isWorldReadyLocal) {
+			var complete = true;
+			for (var i = 0; i < isWorldReadyLocal.length; i++)
+				complete = complete * isWorldReadyLocal[i];
 
-		return complete;
-	}
+			if (!complete)
+				alert("Cuidado, hay modelos que no cargaron!");
 
-	function render() {
-       // $("#test-00").text(ValidateAllLoadedModels(isWorldReady) );
-		requestAnimationFrame(render);
-        //debugger;
-		deltaTime = clock.getDelta();	
-       
+			return complete;
+		}
 
-		
-		
-		
-       keysPlayers();
- 
+		var total = 0;
+	
+		function render() {
 
-		if (ValidateAllLoadedModels(isWorldReady)) {
-			//var car = scene.getObjectByName('carroX');
-		//debugger;
-			//jugadorX.keysForPlayer(4, camPlayers[3]);
-			
-			for(var i = 0; i < players; i++)
-			{
-				camPosition = "Player["+ (i+1) + "] Posicion de camara [" + 
-                Math.round(camPlayers[i].position.x) + "," +
-                Math.round(camPlayers[i].position.y) + "," +
-                Math.round(camPlayers[i].position.z) + "]"
-				;
-			/* carPosition = "Posicion de carro [ " + 
-					car.position.x + "," +
-					car.position.y + "," +
-					car.position.z + "]"
-				;*/
+			total = requestAnimationFrame(render);
+			if (total <= 200) {
 				
-				$("#test-0"+(i+1)).text(camPosition);
-			}
-           
-			/*
-            camPlayers[0].rotation.y += yaw * deltaTime;
-			camPlayers[0].translateZ(forward * deltaTime);
-			camPlayers[0].translateX(leftRight);
-			*/
-			for(var i = 0; i < players; i++)
+				$("#cargando").text("Cargando..." + (total /2) + "%");
+				$("#pgb-render").val(total);
+				
+
+			}else 
 			{
-				camPlayers[i].rotation.y += yaw[i] * deltaTime;
-				camPlayers[i].translateZ(forward[i] * deltaTime);
-				camPlayers[i].translateX(leftRight[i]);
+			//	$("#menu").remove();
+				$("#cargando").text("Carga completada!");
+				$("#empezarJuego").attr("disabled",false);
 			}
+			//debugger;
+			//alert(inputXpad[0].A[2]);
+//			$("#test-retroceso").text(jugador[0].inputXpad.A[2] + "  " + (jugador[0].inputXpad.sensibilidad * -1));
+
+
+			deltaTime = clock.getDelta();
 
 			
 
-            /*
-            camPlayers[0].lookAt(car.position);
-            car.rotation.y += (yaw * deltaTime);
-			car.translateZ(forward * deltaTime);
-            car.translateX(leftRight);*/
+			if (ValidateAllLoadedModels(isWorldReady)) {
 
-			for(var i = 0; i < camPlayers[0].rayos.length; i++)
-			{
-				//Param1: desde donde lanzamos el rayo (vector)
-				//Param2: hacia donde (direccion del vector)
-				raycaster.set(camPlayers[0].position, camPlayers[0].rayos[i]);
+keysPlayers();
+				for (var i = 0; i < players; i++) {
+					camPosition = "Player[" + (i + 1) + "] Posicion de camara [" +
+						Math.round(jugador[i].camPlayer.position.x) + "," +
+						Math.round(jugador[i].camPlayer.position.y) + "," +
+						Math.round(jugador[i].camPlayer.position.z) + "]"
+						;
 
-				//Verificamos si existe la colisión
-				//Param1: Objeto(s) "colisionables"
-				//Param2: Si queremos validar la colisión con los hijos 
-				/*
-					para objetos
-						var colisiones = raycaster.intersectObject(objeto);
-					para arreglos
-						var colisiones = raycaster.intersectObjects(objetosConColision, false);
-
-					para colision con hijos
-					var colisiones = raycaster.intersectObjects(objetosConColision, true);
-
-				*/
-				var colisiones = raycaster.intersectObjects(objetosConColision, true);
-
-				//si el arreglo es amyuor a cero entonces si hay colision
-				if(colisiones.length > 0 && colisiones[0].distance < 1)
-				{
-					console.log("colisionando");
+					$("#test-0" + (i + 1)).text(camPosition);
 				}
+
+
+				$("#p1-data").html
+				(
+					"Rotacion izq [" + jugador[0].camPlayer.children[0].rotation.y + "] <br>" +
+					"Rotacion maxRot[0] [" + jugador[0].camPlayer.children[0].maxRot[0].y + "] <br>" +
+					"Rotacion maxRot[1] [" + jugador[0].camPlayer.children[0].maxRot[1].y + "]"
+				);
+				//jugador[0].modelo.rotation += THREE.Math.degToRad(10);
+
+				for (var i = 0; i < players; i++) {
+					jugador[i].camPlayer.rotation.y += jugador[i].yaw * deltaTime;
+					jugador[i].camPlayer.translateZ(jugador[i].forward * deltaTime);
+					jugador[i].camPlayer.translateX(jugador[i].leftRight);
+				}
+
+				for (var j = 0; j < players; j++)
+					for (var i = 0; i < jugador[j].rayos.length; i++) {
+						//Param1: desde donde lanzamos el rayo (vector)
+						//Param2: hacia donde (direccion del vector)
+
+						jugador[j].raycaster.set(jugador[j].camPlayer.position, jugador[j].rayos[i]);
+
+						//Verificamos si existe la colisión
+						//Param1: Objeto(s) "colisionables"
+						//Param2: Si queremos validar la colisión con los hijos 
+						/*
+							para objetos
+								var colisiones = raycaster.intersectObject(objeto);
+							para arreglos
+								var colisiones = raycaster.intersectObjects(objetosConColision, false);
+		
+							para colision con hijos
+							var colisiones = raycaster.intersectObjects(objetosConColision, true);
+		
+						*/
+						var colisiones = jugador[j].raycaster.intersectObjects(objetosConColision, true);
+
+						//si el arreglo es mayor a cero entonces si hay colision
+						if (colisiones.length > 0 && colisiones[0].distance < 1) {
+							console.log("player" + j + " colisionando");
+						}
+					}
 			}
+
+			//debugger;
+			for (var i = 0; i < players; i++)
+				jugador[i].viewport.render(scene, jugador[i].camPlayer);
+
+			/*if(jugador[3].viewport.render!=null)
+				$("#test-00").text("OK");*/
+			//debugger;
+
+			//debugger;
+			//$("#test-00").text(render.arguments[0]);
+
 		}
-		
-        
-        
 
-		//renderer.render(scene, camPlayers[0]);
-        for(var i=0; i < players; i++)        
-			viewports[i].render(scene, camPlayers[i]);
-		/*
-        viewports[1].render(scene, camPlayers[1]);
-        viewports[2].render(scene, camPlayers[2]);
-       viewports[3].render(scene, camPlayers[3]);
-        */
-	}
 
-	
 
-    function setupSceneForViewport(screenID, objectID, posX, posY, posZ) {	
+		function setupSceneForViewport(screenID, objectID, posX, posY, posZ) {
 
-        switch(players)
-        {
-            case 1: 
-                var visibleSize = { width: window.innerWidth, height: window.innerHeight};
-            break;
-            case 2:
-                var visibleSize = { width: ((window.innerWidth/2)-10), height: window.innerHeight};
-            break;
-            case 3:
-                var visibleSize = { width: (window.innerWidth/2)-10, height: (window.innerHeight/2)-10};
-            break;
-            case 4:
-                var visibleSize = { width: (window.innerWidth/2)-10, height: (window.innerHeight/2)-10};
-            break;
-            default:
-                var visibleSize = { width: window.innerWidth, height: window.innerHeight};
-            break;
-        }
-		
-        //var visibleSize = { width: 100, height: 100};
-		
-        clock = new THREE.Clock();		
-		scene = new THREE.Scene();
-		//camPlayers[0] = new THREE.PerspectivecamPlayers[0](75, visibleSize.width / visibleSize.height, 0.1, 100);
-        camPlayers[screenID] = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 100);
-		camPlayers[screenID].position.x = posX;
-		camPlayers[screenID].position.y = posY;
-		camPlayers[screenID].position.z = posZ;
-		
+			switch (players) {
+				case 1:
+					var visibleSize = { width: window.innerWidth, height: window.innerHeight };
+					break;
+				case 2:
+					var visibleSize = { width: ((window.innerWidth / 2) - 10), height: window.innerHeight };
+					break;
+				case 3:
+					var visibleSize = { width: (window.innerWidth / 2) - 10, height: (window.innerHeight / 2) - 10 };
+					break;
+				case 4:
+					var visibleSize = { width: (window.innerWidth / 2) - 10, height: (window.innerHeight / 2) - 10 };
+					break;
+				default:
+					var visibleSize = { width: window.innerWidth, height: window.innerHeight };
+					break;
+			}
 
-		viewports[screenID] = new THREE.WebGLRenderer( {precision: "mediump" } );
-		//renderer.setClearColor(new THREE.Color(0, 0, 0));
-        viewports[screenID].setClearColor(new THREE.Color(0.1,0.5,0.6));
-		viewports[screenID].setPixelRatio(visibleSize.width / visibleSize.height);
-		viewports[screenID].setSize(visibleSize.width, visibleSize.height);
+			//var visibleSize = { width: 100, height: 100};
 
-		var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 1.0);
-		scene.add(ambientLight);
+			clock = new THREE.Clock();
+			scene = new THREE.Scene();
+			//camPlayers[0] = new THREE.PerspectivecamPlayers[0](75, visibleSize.width / visibleSize.height, 0.1, 100);
+			jugador[screenID].camPlayer = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 100);
+			jugador[screenID].camPlayer.position.x = posX;
+			jugador[screenID].camPlayer.position.y = posY;
+			jugador[screenID].camPlayer.position.z = posZ;
+			jugador[screenID].camPlayer.name = "player" + screenID;
 
-		var directionalLight = new THREE.DirectionalLight(new THREE.Color(1, 1, 1), 0.4);
-		directionalLight.position.set(0, 0, 1);
-		scene.add(directionalLight);
+			jugador[screenID].viewport = new THREE.WebGLRenderer({ precision: "mediump" });
+			//renderer.setClearColor(new THREE.Color(0, 0, 0));
+			jugador[screenID].viewport.setClearColor(new THREE.Color(0.1, 0.5, 0.6));
+			jugador[screenID].viewport.setPixelRatio(visibleSize.width / visibleSize.height);
+			jugador[screenID].viewport.setSize(visibleSize.width, visibleSize.height);
 
-		var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
-		grid.position.y = -1;
-		scene.add(grid);
-		scene.add(camPlayers[0]);
-       
+			var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 1.0);
+			scene.add(ambientLight);
 
-		$("#" + objectID).append(viewports[screenID].domElement);
-	}
+			var directionalLight = new THREE.DirectionalLight(new THREE.Color(1, 1, 1), 0.4);
+			directionalLight.position.set(0, 0, 1);
+			scene.add(directionalLight);
+
+			var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
+			grid.position.y = -1;
+			scene.add(grid);
+
+			for (var i = 0; i < players; i++)
+				scene.add(jugador[i].camPlayer);
+
+
+			$("#" + objectID).append(jugador[screenID].viewport.domElement);
+		}
 
 
 
@@ -285,50 +286,39 @@
 
 <body>
 
+	<div id="menu" class="menu">
+		<div class="section">
+			<img class="imgMenu" src="src/menu.jpeg">
+			<button id="empezarJuego" class="btn" type="button">Empezar el juego</button>
+			<button class="btn" type="button">Salir</button><br>
+			<label id="cargando">Cargando...</label>
+			<progress id="pgb-render" value="0" max="200"></progress>	
+		</div>
+	</div>
+	
 
-    <div id="test-00" style='color:white;'>Crystal Burns</div>
-    <span class='scene' id="scene-section-01">
-		<div id="test-01" style='color:white;'>Viewport [0]</div>
+	<span class='GUI' id="scene-section-01">
+		<img src="src/image-01.png" style="position:absolute; z-index: 1; width:50px; " />
+		<div id="test-01" class="viewport top">Viewport [0]</div>
+		<span class="controles">Controles: WASD-QE + Controller</span>
+	</span>
+	<span class='GUI' id="scene-section-02">
+		<img src="src/image-02.png" style="position:absolute; z-index: 1; width:50px; " />
+		<div id="test-02" class="viewport">Viewport [1]</div>
+		<span class="controles">Controles: TFGH-RY</span>
+	</span>
+	<span class='GUI' id="scene-section-03">
+		<img src="src/image-03.png" style="bottom:0px; position:absolute; z-index: 1; width:50px; " />
+		<div id="test-03" class="viewport">Viewport [2]</div>
+		<span class="controles-b">Controles: IJKL-UO</span>
+	</span>
+	<span class='GUI' id="scene-section-04">
+		<img src="src/image-04.png" style="bottom: 0px; position:absolute; z-index: 1; width:50px; " />
+		<div id="test-04" class="viewport">Viewport [3]</div>
+		<span class="controles-b">Controles: 1234-56</span>
+	</span>
+
 	
-		<img src="image-01.png" style="position:absolute; z-index: 1; width:50px; "/>
-		<span style="position:absolute; left:50px; background-color:darkgreen; box-sizing:border-box; padding:1%; color:white;">
-			Controles:
-		</span>
-		<div style="position:absolute; left: 125px; width:calc(50% - 125px); background-color:darkgreen;box-sizing:border-box; color:white; padding:1%;" >
-			WASD-QE
-		</div>
-	
-	</span>
-    <span class='scene' id="scene-section-02">
-		<div id="test-02" style='color:white;'>Viewport [1]</div>
-		<img src="image-02.png" style="position:absolute; z-index: 1; width:50px; "/>
-		<span style="position:absolute; right:calc(50% - 140px); background-color:darkgreen; box-sizing:border-box; padding:1%; color:white;">
-			Controles:
-		</span>
-		<div style="position:absolute; right:0px; width:calc(50% - 140px); background-color:darkgreen;box-sizing:border-box; color:white; padding:1%;" >
-				TFGH-RY
-		</div>
-	</span>
-    <span class='scene' id="scene-section-03">
-		<div id="test-03" style='color:white;'>Viewport [2]</div>
-		<img src="image-03.png" style="bottom:0px; position:absolute; z-index: 1; width:50px; "/>
-		<span style="bottom:0px; position:absolute; left:50px; background-color:darkgreen; box-sizing:border-box; padding:1%; color:white;">
-			Controles:
-		</span>
-		<div style="bottom:0px; position:absolute; left: 125px; width:calc(50% - 125px); background-color:darkgreen;box-sizing:border-box; color:white; padding:1%;" >
-			IJKL-UO
-		</div>
-	</span>
-    <span class='scene' id="scene-section-04">
-		<div id="test-04" style='color:white;'>Viewport [3]</div>
-		<img src="image-04.png" style="bottom: 0px; position:absolute; z-index: 1; width:50px; "/>
-		<span style="bottom:0px; position:absolute; right:calc(50% - 140px); background-color:darkgreen; box-sizing:border-box; padding:1%; color:white;">
-			Controles:
-		</span>
-		<div style="bottom: 0px; position:absolute; right:0px; width:calc(50% - 140px); background-color:darkgreen;box-sizing:border-box; color:white; padding:1%;" >
-				1234-56
-		</div>
-	</span>
-    
 </body>
+
 </html>

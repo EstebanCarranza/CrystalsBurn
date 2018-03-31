@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript" src="js/functions/gamepad.js"></script>
-    <script>
-        $(document).ready(function ()
-        {
-            enableGamepads();
-            
-            $("#get").click(function()
-            {
-                console.log(getInput(0));
-                $("#input").text(getInput(0));
-            });
-        });
-    </script>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>jQuery cmGauge Demo</title>
+        <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/cmGauge.css">
+        
 </head>
-<body>
-    <button id="get">ACTUALIZAR</button>
-    <div id="input">hola</div>
+ <body> 
+<div class="container">
+        <div id="gaugeDemo" class="gauge gauge-big gauge-green">
+            <div class="gauge-arrow" data-percentage="0"
+                 style="transform: rotate(0deg);"></div>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <button class="btn btn-primary">Update The Gauge</button>
+        </div>
+</div>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="js/cmGauge.js"></script>
+        <script type="text/javascript">
+         
+         $("#gaugeDemo .gauge-arrow").attr("data-percentage") = 100;
+                    //var randomNum = Math.floor((Math.random() * 100));
+                    //$('#gaugeDemo .gauge-arrow').trigger('updateGauge', total);
+         
+                //$('#gaugeDemo .gauge-arrow').cmGauge();
+         
+        </script>
 </body>
 </html>
