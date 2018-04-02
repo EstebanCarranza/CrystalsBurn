@@ -30,36 +30,32 @@ function cargar_cajas()
 	});
 }
 
-class OBJ_modelX
-{
-	constructor(pathFOLDER, pathOBJ, pathMTL, modelo, spectatorPos, spectatorScl, spectatorRot)
-	{
-		loadOBJWithMTL(pathFOLDER, pathOBJ, pathMTL, (objetoCargado) => {
+function crear_pista()
+{ 
+		
+		loadOBJWithMTL("assets/maps/", "calle.obj", "calle.mtl", (objetoCargado) => {
 			//Aqui tenemos al OBJ
 			//cargado y como objeto de THREEJS (Object3D)
 			//Verificar luz especular en el material Kd que no esté en 0
-			objetoCargado.scale.x = spectatorScl.x;
-			objetoCargado.scale.y = spectatorScl.y;
-			objetoCargado.scale.z = spectatorScl.z;
 			
-
-			objetoCargado.position.x = spectatorPos.x;
-			objetoCargado.position.y = spectatorPos.y;
-			objetoCargado.position.z = spectatorPos.z;
-
-
-			objetoCargado.rotation.x = spectatorRot.x;
-			objetoCargado.rotation.y = spectatorRot.y;
-			objetoCargado.rotation.z = spectatorRot.z;
-
-			scene.add(objetoCargado);
-
-			//debugger;
+			objetoCargado.position.y = -10;
+			objetoCargado.position.z = -100;
+			objetoCargado.scale.x = 20;
+			objetoCargado.scale.y = 20;
+			objetoCargado.scale.z = 20;
+			
+			var total = 20;
+			for(var i = 0; i < total; i++)
+			{
+				pista[i] = objetoCargado.clone();
+				pista[i].position.z -= (400*i); 
+				scene.add(pista[i]);
+			}	
 			
 			isWorldReady.push(true);
 		});
-	}
 }
+
 class OBJ_Terrain
 {
 	constructor(pathFOLDER, pathOBJ, pathMTL, modelo, spectatorPos, spectatorScl, spectatorRot)

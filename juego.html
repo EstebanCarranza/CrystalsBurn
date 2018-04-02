@@ -32,6 +32,7 @@
 		var keys = {};
 		var isWorldReady = [];
 		var cajaX = [];
+		var pista = [];
 		var debug = true;
 		var objetosConColision = [];
 		var jugador = [];
@@ -40,28 +41,30 @@
 		//			spectatorPos, 
 		//			spectatorScl, 
 		//			spectatorRot)
-		var velMax = 200;
-		jugador[0] = new Jugador(0, velMax, 1, 0.1, 1,
+		var velMax = 500;
+		var vel = 10;
+		jugador[0] = new Jugador(0, vel, 1, 0.001, 1, velMax,
 			new THREE.Vector3(0, -10, -25),
 			new THREE.Vector3(0.001, 0.001, 0.001),
 			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
 
-		jugador[1] = new Jugador(1, velMax, 1, 0.1, 1,
+		jugador[1] = new Jugador(1, vel, 1, 0.01, 1, velMax,
 			new THREE.Vector3(0, -10, -25),
 			new THREE.Vector3(0.001, 0.001, 0.001),
 			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
 
-		jugador[2] = new Jugador(2,velMax, 1, 0.1, 1,
+		jugador[2] = new Jugador(2,vel, 1, 0.01, 1, velMax,
 			new THREE.Vector3(0, -10, -25),
 			new THREE.Vector3(0.001, 0.001, 0.001),
 			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
 
-		jugador[3] = new Jugador(3, velMax, 1, 0.1, 1,
+		jugador[3] = new Jugador(3, vel, 1, 0.01, 1, velMax,
 			new THREE.Vector3(0, -10, -25),
 			new THREE.Vector3(0.001, 0.001, 0.001),
 			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
 
 		var obj;
+		var obj2;
 
 		function init() {
 			//carpeta, OBJ, MTL, player
@@ -70,13 +73,12 @@
 			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[2]);
 			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[3]);
 
-			new OBJ_modelX("assets/maps/", "calle.obj", "calle.mtl", obj,
-				new THREE.Vector3(0, 0, 0),
-				new THREE.Vector3(10, 10, 10),
-				new THREE.Vector3(0, 0, 0)
-			);
 			
-
+			//debugger;
+			/*
+			obj2 = obj.clone();
+			obj2.position.y += 2;
+			scene.add(obj2);*/
 
 			//jugador[1].modelo = bmw;
 			//scene.add(jugador[1].modelo);
@@ -111,20 +113,21 @@
 			enableGamepads();
 
 			//setupScene(1, "scene-section");
-			setupSceneForViewport(0, "scene-section-01", 10, 10, 10);
+			setupSceneForViewport(0, "scene-section-01", 20, 2, 0);
 
 			if (players >= 2)
-				setupSceneForViewport(1, "scene-section-02", 10, 10, -10);
+				setupSceneForViewport(1, "scene-section-02", 10, 2, 0);
 			if (players >= 3)
-				setupSceneForViewport(2, "scene-section-03", -10, 10, 10);
+				setupSceneForViewport(2, "scene-section-03", -10, 2, 0);
 
 			//jugadorX = new Jugador(3, -10, 5, -10);
 
 			if (players >= 4)
-				setupSceneForViewport(3, "scene-section-04", -10, 10, -10);
+				setupSceneForViewport(3, "scene-section-04", -20, 2, 0);
 
-			cargar_cajas();
+			//cargar_cajas();
 			//cargar_carro(0, jugador[0]);
+			crear_pista();
 
 			document.addEventListener('keydown', onKeyDown);
 			document.addEventListener('keyup', onKeyUp);
@@ -179,6 +182,7 @@
 				
 				$("#cargando").text("Carga completada!");
 				$("#empezarJuego").attr("disabled", false);
+				$("#menu").remove();
 			}
 			//debugger;
 			//alert(inputXpad[0].A[2]);
@@ -423,7 +427,7 @@
 			<button id="velMaxBtn">Aplicar</button>
 			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
 			<div id="P0-vwp" class="">Viewport [0]</div>
-			<span id="P0-ctr" class="">Controller Xbox One</span>
+			<span id="P0-ctr" class="">Controller Xbox One + WASD</span>
 			<div id="P0-rot" class="">H</div>
 			
 		</div>
@@ -431,21 +435,21 @@
 		<div id="cvP1">2
 			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
 			<div id="P1-vwp" class="">Viewport [0]</div>
-			<span id="P1-ctr" class="">Controles: WASD-QE + Controller</span>
+			<span id="P1-ctr" class="">Controller Xbox One + Flechas direccionales</span>
 			<div id="P1-rot" class="">H</div>
 
 		</div>
 		<div id="cvP2">3
 			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
 			<div id="P2-vwp" class="">Viewport [0]</div>
-			<span id="P2-ctr" class="">Controles: WASD-QE + Controller</span>
+			<span id="P2-ctr" class="">Controller Xbox One + Flechas de NUMPAD</span>
 			<div id="P2-rot" class="">H</div>
 
 		</div>
 		<div id="cvP3">4
 			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
 			<div id="P3-vwp" class="">Viewport [0]</div>
-			<span id="P3-ctr" class="">Controles: WASD-QE + Controller</span>
+			<span id="P3-ctr" class="">Controller Xbox One + UHJK</span>
 			<div id="P3-rot" class="">H</div>
 
 		</div>

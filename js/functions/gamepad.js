@@ -36,9 +36,9 @@ class Keyboard
                 this.PovUp      [1] = "";
                 this.PovDown    [1] = "";
                 this.A          [1] = "W";
-                this.B          [1] = "";
+                this.B          [1] = "Q";
                 this.X          [1] = "S";
-                this.Y          [1] = "";
+                this.Y          [1] = "E";
                 this.LT         [1] = "";
                 this.LB         [1] = "";
                 this.RT         [1] = "";

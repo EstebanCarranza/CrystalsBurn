@@ -1,5 +1,5 @@
 class Jugador {
-	constructor(id, forwardLimit, yawLimit, leftRightLimit, topBottomLimit, spectatorPos, spectatorScl, spectatorRot) {
+	constructor(id, forwardLimit, yawLimit, leftRightLimit, topBottomLimit, velMax, spectatorPos, spectatorScl, spectatorRot) {
 		this.id = id;
 		this.forward = 0;
 		this.yaw = 0;
@@ -8,6 +8,7 @@ class Jugador {
 		this.topBottom = 0;
 		this.camPlayer;
 		this.forwardLimit = forwardLimit;
+		this.forwardLimitAux = forwardLimit;
 		this.yawLimit = yawLimit;
 		this.leftRightLimit = leftRightLimit;
 		this.topBottomLimit = topBottomLimit;
@@ -17,6 +18,7 @@ class Jugador {
 		this.spectatorPos = new THREE.Vector3(spectatorPos.x, spectatorPos.y, spectatorPos.z);
 		this.spectatorRot = new THREE.Vector3(spectatorRot.x, spectatorRot.y, spectatorRot.z);
 		this.spectatorScl = new THREE.Vector3(spectatorScl.x, spectatorScl.y, spectatorScl.z);
+		this.velMax = velMax;
 		this.rayos =
 			[
 				new THREE.Vector3(1, 0, 0),
@@ -26,6 +28,9 @@ class Jugador {
 			];
 		this.raycaster = new THREE.Raycaster();
 
+		/*this.inputXpad = [];
+		this.inputXpad[0] = new Gamepad(id);
+		this.inputXpad[1] = new Keyboard(id);*/
 		this.inputXpad = new Gamepad(id);
 		this.inputKpad = new Keyboard(id);
 	}
@@ -138,36 +143,45 @@ function xInputPlayer(IP)
 		jugador[IP].inputXpad.A[1] = false;
 		if (jugador[IP].inputXpad.A[2] >= (jugador[IP].inputXpad.sensibilidad * -1))
 			jugador[IP].inputXpad.A[2] -= 1;
+		
 		jugador[IP].forward = -jugador[IP].forwardLimit;
-
+		
+		if(jugador[IP].forwardLimit <= jugador[IP].velMax)
+			jugador[IP].forwardLimit+=1;
+		
+		
 	}
 	//Mover para atras
 	else if ((jugador[IP].inputXpad.X[1]) || (keys[jugador[IP].inputKpad.X[1]])) {
 
 		jugador[IP].inputXpad.X[1] = false;
+
+		if (jugador[IP].inputXpad.X[2] >= (jugador[IP].inputXpad.sensibilidad * -1))
+			jugador[IP].inputXpad.X[2] -= 1;
+
 		jugador[IP].forward = jugador[IP].forwardLimit;
 	}
 
 	//Mover para la izquierda (paneo)
-	if ((jugador[IP].inputXpad.LB[1])) {
+	if ((jugador[IP].inputXpad.LB[1]) || (keys[jugador[IP].inputKpad.LB[1]])) {
 		
 		jugador[IP].inputXpad.LB[1] = false;
 		jugador[IP].leftRight = -jugador[IP].leftRightLimit;
 	}
 	//Mover para la derecha (paneo)
-	else if ((jugador[IP].inputXpad.RB[1])) {
+	else if ((jugador[IP].inputXpad.RB[1]) || (keys[jugador[IP].inputKpad.RB[1]])) {
 		jugador[IP].inputXpad.RB[1] = false;
 		jugador[IP].leftRight = jugador[IP].leftRightLimit;
 	}
 
 	//Mover para arriba
-	if ((jugador[IP].inputXpad.B[1])) {
+	if ((jugador[IP].inputXpad.B[1]) || keys[jugador[IP].inputKpad.B[1]]) {
 		
 		jugador[IP].inputXpad.B[1] = false;
 		jugador[IP].topBottom = jugador[IP].topBottomLimit;
 	}
 	//Mover para abajo
-	else if ((jugador[IP].inputXpad.Y[1])) {
+	else if ((jugador[IP].inputXpad.Y[1]) || keys[jugador[IP].inputKpad.Y[1]]) {
 		jugador[IP].inputXpad.Y[1] = false;
 		jugador[IP].topBottom = -jugador[IP].topBottomLimit;
 	}
@@ -180,7 +194,8 @@ function xInputPlayer(IP)
 		if (
 			((jugador[IP].inputXpad.A[1])) ||
 			((jugador[IP].inputXpad.X[1])) ||
-			(jugador[IP].inputXpad.A[2] != jugador[IP].inputXpad.sensibilidad)
+			(jugador[IP].inputXpad.A[2] != jugador[IP].inputXpad.sensibilidad) ||
+			(jugador[IP].inputXpad.X[2] != jugador[IP].inputXpad.sensibilidad)
 		) {
 			jugador[IP].yaw = jugador[IP].yawLimit;
 			if
@@ -201,7 +216,8 @@ function xInputPlayer(IP)
 		if (
 			((jugador[IP].inputXpad.A[1])) ||
 			((jugador[IP].inputXpad.X[1])) ||
-			(jugador[IP].inputXpad.A[2] != jugador[IP].inputXpad.sensibilidad)
+			(jugador[IP].inputXpad.A[2] != jugador[IP].inputXpad.sensibilidad) ||
+			(jugador[IP].inputXpad.X[2] != jugador[IP].inputXpad.sensibilidad)
 		) {
 			jugador[IP].yaw = -jugador[IP].yawLimit;
 			if
@@ -228,6 +244,7 @@ function keysPlayers() {
 			jugador[i].topBottom = 0;
 			
 			xInputPlayer(i);
+//			jugador[i].forwardLimit = jugador[i].forwardLimitAux;
 		}
 	}
 	
