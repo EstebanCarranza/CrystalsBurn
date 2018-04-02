@@ -1,6 +1,123 @@
-
-
-class mugrero
+class Keyboard
+{
+    constructor(index)
+    {
+        this.LStickLeft =               [("KB_" + index + "_LStickLeft"),""];
+        this.LStickRight =              [("KB_" + index + "_LStickRight"),""];
+        this.LStickUp =                 [("KB_" + index + "_LStickUp"),""];
+        this.LStickDown =               [("KB_" + index + "_LStickDown"),""];
+        this.LStickClick =              [("KB_" + index + "_LStickClick"),""];
+        this.RStickClick =              [("KB_" + index + "_RStickClick"),""];
+        this.PovLeft =                  [("KB_" + index + "_PovLeft"),""];
+        this.PovRight =                 [("KB_" + index + "_PovRight"),""];
+        this.PovUp =                    [("KB_" + index + "_PovUp"),""];
+        this.PovDown =                  [("KB_" + index + "_PovDown"),""];
+        this.A =                        [("KB_" + index + "_A"),""];
+        this.B =                        [("KB_" + index + "_B"),""];
+        this.X =                        [("KB_" + index + "_X"),""];
+        this.Y =                        [("KB_" + index + "_Y"),""];
+        this.LT =                       [("KB_" + index + "_LT"),""];
+        this.LB =                       [("KB_" + index + "_LB"),""];
+        this.RT =                       [("KB_" + index + "_RT"),""];
+        this.RB =                       [("KB_" + index + "_RB"),""];
+        this.START =                    [("KB_" + index + "_START"),""];
+        this.SELECT =                   [("KB_" + index + "_SELECT"),""];
+        switch(index)
+        {
+            case 0: 
+                this.LStickLeft [1] = "A";
+                this.LStickRight[1] = "D";
+                this.LStickUp   [1] = "";
+                this.LStickDown [1] = "";
+                this.LStickClick[1] = "";
+                this.RStickClick[1] = "";
+                this.PovLeft    [1] = "";
+                this.PovRight   [1] = "";
+                this.PovUp      [1] = "";
+                this.PovDown    [1] = "";
+                this.A          [1] = "W";
+                this.B          [1] = "";
+                this.X          [1] = "S";
+                this.Y          [1] = "";
+                this.LT         [1] = "";
+                this.LB         [1] = "";
+                this.RT         [1] = "";
+                this.RB         [1] = "";
+                this.START      [1] = "";
+                this.SELECT     [1] = "";
+            break;
+            case 1: 
+                this.LStickLeft [1] = "%";
+                this.LStickRight[1] = "'";
+                this.LStickUp   [1] = "";
+                this.LStickDown [1] = "";
+                this.LStickClick[1] = "";
+                this.RStickClick[1] = "";
+                this.PovLeft    [1] = "";
+                this.PovRight   [1] = "";
+                this.PovUp      [1] = "";
+                this.PovDown    [1] = "";
+                this.A          [1] = "&";
+                this.B          [1] = "";
+                this.X          [1] = "(";
+                this.Y          [1] = "";
+                this.LT         [1] = "";
+                this.LB         [1] = "";
+                this.RT         [1] = "";
+                this.RB         [1] = "";
+                this.START      [1] = "";
+                this.SELECT     [1] = "";
+            break;
+            case 2: 
+                this.LStickLeft [1] = "d";
+                this.LStickRight[1] = "f";
+                this.LStickUp   [1] = "";
+                this.LStickDown [1] = "";
+                this.LStickClick[1] = "";
+                this.RStickClick[1] = "";
+                this.PovLeft    [1] = "";
+                this.PovRight   [1] = "";
+                this.PovUp      [1] = "";
+                this.PovDown    [1] = "";
+                this.A          [1] = "h";
+                this.B          [1] = "";
+                this.X          [1] = "b";
+                this.Y          [1] = "";
+                this.LT         [1] = "";
+                this.LB         [1] = "";
+                this.RT         [1] = "";
+                this.RB         [1] = "";
+                this.START      [1] = "";
+                this.SELECT     [1] = "";
+            break;
+            case 3: 
+                this.LStickLeft [1] = "H";
+                this.LStickRight[1] = "K";
+                this.LStickUp   [1] = "";
+                this.LStickDown [1] = "";
+                this.LStickClick[1] = "";
+                this.RStickClick[1] = "";
+                this.PovLeft    [1] = "";
+                this.PovRight   [1] = "";
+                this.PovUp      [1] = "";
+                this.PovDown    [1] = "";
+                this.A          [1] = "U";
+                this.B          [1] = "";
+                this.X          [1] = "J";
+                this.Y          [1] = "";
+                this.LT         [1] = "";
+                this.LB         [1] = "";
+                this.RT         [1] = "";
+                this.RB         [1] = "";
+                this.START      [1] = "";
+                this.SELECT     [1] = "";
+            break;
+            default:break;
+        }
+        
+    }
+}
+class Gamepad
 {
     constructor(index) 
     {

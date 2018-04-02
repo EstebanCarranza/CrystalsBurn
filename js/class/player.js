@@ -26,7 +26,8 @@ class Jugador {
 			];
 		this.raycaster = new THREE.Raycaster();
 
-		this.inputXpad = new mugrero(id);
+		this.inputXpad = new Gamepad(id);
+		this.inputKpad = new Keyboard(id);
 	}
 };
 
@@ -131,7 +132,7 @@ function xInputPlayer(IP)
 	
 
 	//Mover para adelante
-	if ((jugador[IP].inputXpad.A[1])) {
+	if ((jugador[IP].inputXpad.A[1]) || (keys[jugador[IP].inputKpad.A[1]])) {
 		//debugger;
 		
 		jugador[IP].inputXpad.A[1] = false;
@@ -141,7 +142,7 @@ function xInputPlayer(IP)
 
 	}
 	//Mover para atras
-	else if ((jugador[IP].inputXpad.X[1])) {
+	else if ((jugador[IP].inputXpad.X[1]) || (keys[jugador[IP].inputKpad.X[1]])) {
 
 		jugador[IP].inputXpad.X[1] = false;
 		jugador[IP].forward = jugador[IP].forwardLimit;
@@ -172,7 +173,8 @@ function xInputPlayer(IP)
 	}
 
 	//Mover para la izquierda (rotacion)
-	if ((jugador[IP].inputXpad.LStickLeft[1])) {
+	if ((jugador[IP].inputXpad.LStickLeft[1])|| (keys[jugador[IP].inputKpad.LStickLeft[1]])) 
+	{
 		jugador[IP].inputXpad.LStickLeft[1] = false;
 		//este if está para bloquear la rotación en caso de no mover el choche
 		if (
@@ -193,7 +195,7 @@ function xInputPlayer(IP)
 		}
 	}
 	// Mover para la derecha (rotacion)
-	else if ((jugador[IP].inputXpad.LStickRight[1])) {
+	else if ((jugador[IP].inputXpad.LStickRight[1]) || (keys[jugador[IP].inputKpad.LStickRight[1]])) {
 		jugador[IP].inputXpad.LStickRight[1] = false;
 		//este if está para bloquear la rotación en caso de no mover el choche
 		if (

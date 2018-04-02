@@ -26,7 +26,7 @@
 		var renderer;
 		//var viewports = [];
 		//var camPlayers = [];
-		var players = 4;
+		var players = 1;
 		var clock;
 		var deltaTime;
 		var keys = {};
@@ -40,7 +40,7 @@
 		//			spectatorPos, 
 		//			spectatorScl, 
 		//			spectatorRot)
-		var velMax = 200;
+		var velMax = 500;
 		jugador[0] = new Jugador(0, velMax, 1, 0.1, 1,
 			new THREE.Vector3(0, -10, -25),
 			new THREE.Vector3(0.001, 0.001, 0.001),
@@ -70,9 +70,9 @@
 			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[2]);
 			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[3]);
 
-			new OBJ_modelX("assets/maps/", "calle.obj", "calle.mtl", obj,
-				new THREE.Vector3(0, 0, 0),
-				new THREE.Vector3(10, 10, 10),
+			new OBJ_modelX("assets/maps/Bridge/", "Bridge_n.obj", "Bridge_n.mtl", obj,
+				new THREE.Vector3(0, -50, 0),
+				new THREE.Vector3(120, 120, 120),
 				new THREE.Vector3(0, 0, 0)
 			);
 			
@@ -126,19 +126,18 @@
 			cargar_cajas();
 			//cargar_carro(0, jugador[0]);
 
-			document.addEventListener('keydown', onKeyDown);
-			document.addEventListener('keyup', onKeyUp);
 
 			//alert("OK");
 			render();
 
-			
+			document.addEventListener('keydown', onKeyDown);
+			document.addEventListener('keyup', onKeyUp);
 		});
 
 
 
 		function onKeyDown(event) {
-			//console.log(String.fromCharCode(event.keyCode));
+
 			keys[String.fromCharCode(event.keyCode)] = true;
 
 		}
@@ -192,8 +191,6 @@
 			if (ValidateAllLoadedModels(isWorldReady) && complete) {
 
 				keysPlayers();
-
-
 				for (var i = 0; i < players; i++) {
 					camPosition = "Player[" + (i + 1) + "] Posicion de camara [" +
 						Math.round(jugador[i].camPlayer.position.x) + "," +
