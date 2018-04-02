@@ -33,7 +33,7 @@ function enableGamepads()
 {
     var haveEvents = 'ongamepadconnected' in window;
     var controllers = {};
-    var gameInput = [];
+    //var gameInput = [];
 
     function connecthandler(e) {
     addgamepad(e.gamepad);
@@ -42,6 +42,7 @@ function enableGamepads()
     function addgamepad(gamepad) 
     {
         controllers[gamepad.index] = gamepad; 
+        
         requestAnimationFrame(updateStatus);
     }
 
@@ -65,8 +66,9 @@ function enableGamepads()
         var j;
 
         for (j in controllers) {
+            //console.log(j);
             var controller = controllers[j];
-            gameInput[j] = new mugrero(j);
+            //gameInput[j] = new mugrero(j);
 
             for (i = 0; i < controller.buttons.length; i++) {
                 var val = controller.buttons[i];

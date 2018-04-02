@@ -26,8 +26,70 @@ function cargar_cajas()
 			objetosConColision.push(cajaX[i]);
 		}
 		
-		isWorldReady[0] = true;
+		isWorldReady.push(true);
 	});
+}
+
+class OBJ_modelX
+{
+	constructor(pathFOLDER, pathOBJ, pathMTL, modelo, spectatorPos, spectatorScl, spectatorRot)
+	{
+		loadOBJWithMTL(pathFOLDER, pathOBJ, pathMTL, (objetoCargado) => {
+			//Aqui tenemos al OBJ
+			//cargado y como objeto de THREEJS (Object3D)
+			//Verificar luz especular en el material Kd que no esté en 0
+			objetoCargado.scale.x = spectatorScl.x;
+			objetoCargado.scale.y = spectatorScl.y;
+			objetoCargado.scale.z = spectatorScl.z;
+			
+
+			objetoCargado.position.x = spectatorPos.x;
+			objetoCargado.position.y = spectatorPos.y;
+			objetoCargado.position.z = spectatorPos.z;
+
+
+			objetoCargado.rotation.x = spectatorRot.x;
+			objetoCargado.rotation.y = spectatorRot.y;
+			objetoCargado.rotation.z = spectatorRot.z;
+
+			scene.add(objetoCargado);
+
+			//debugger;
+			
+			isWorldReady.push(true);
+		});
+	}
+}
+class OBJ_Terrain
+{
+	constructor(pathFOLDER, pathOBJ, pathMTL, modelo, spectatorPos, spectatorScl, spectatorRot)
+	{
+		
+		loadOBJWithMTL(pathFOLDER, pathOBJ, pathMTL, (objetoCargado) => {
+			//Aqui tenemos al OBJ
+			//cargado y como objeto de THREEJS (Object3D)
+			//Verificar luz especular en el material Kd que no esté en 0
+			objetoCargado.scale.x = spectatorScl.x;
+			objetoCargado.scale.y = spectatorScl.y;
+			objetoCargado.scale.z = spectatorScl.z;
+			
+
+			objetoCargado.position.x = spectatorPos.x;
+			objetoCargado.position.y = spectatorPos.y;
+			objetoCargado.position.z = spectatorPos.z;
+
+
+			objetoCargado.rotation.x = spectatorRot.x;
+			objetoCargado.rotation.y = spectatorRot.y;
+			objetoCargado.rotation.z = spectatorRot.z;
+
+			scene.add(objetoCargado);
+
+			//debugger;
+			
+			isWorldReady.push(true);
+		});
+	}
 }
 function cargar_carro(screenID, jugador)
 {
@@ -43,7 +105,7 @@ function cargar_carro(screenID, jugador)
 		object.position.y -= 5;
 		//object.position.x -= 1;
 		
-		object.name= "carroX";
+		///object.name= "carroX";
 		
 		jugador.modelo = object;
 		jugador.camPlayer.add(jugador.modelo);

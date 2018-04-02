@@ -1,0 +1,334 @@
+newmtl Dry_grass
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.17 0.17 0.17
+
+Tf 1.00 1.00 1.00
+
+map_Kd Dry_grass.jpg
+
+Ni 1.00
+
+Ks 1.00 1.00 1.00
+
+Ns 3.36
+
+newmtl Flat_gray
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Flat_gray.jpg
+
+Ni 1.00
+Ks 1.00 1.00 1.00
+
+Ns 8.17
+
+newmtl Flat_white0
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Flat_white0.jpg
+
+Ni 1.00
+Ks 1.00 1.00 1.00
+
+Ns 8.17
+
+newmtl Flat_white2
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Flat_white1.jpg
+
+Ni 1.00
+
+Ks 1.00 1.00 1.00
+
+Ns 8.17
+
+newmtl Grey_Rock
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Grey_Rock.jpg
+
+Ni 1.00
+
+Ks 1.00 1.00 1.00
+
+Ns 8.17
+
+newmtl Metal0
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Metal0.jpg
+
+Ni 1.00
+
+Ks 0.67 0.84 0.98
+
+Ns 15.80
+
+newmtl Metal2
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Metal4.jpg
+
+Ni 1.00
+
+Ks 0.67 0.84 0.98
+
+Ns 15.80
+
+newmtl Metal4
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Metal2.jpg
+
+Ni 1.00
+
+Ks 0.67 0.84 0.98
+
+Ns 15.80
+
+newmtl Metal6
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Metal3.jpg
+
+Ni 1.00
+
+Ks 0.67 0.84 0.98
+
+Ns 15.80
+
+newmtl Metal8
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Metal4.jpg
+
+Ni 1.00
+
+Ks 0.67 0.84 0.98
+
+Ns 15.80
+
+newmtl Metal10
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Metal5.jpg
+
+Ni 1.00
+
+Ks 0.67 0.84 0.98
+
+Ns 15.80
+
+newmtl Metallic_Varnish
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Metallic_Varnish.jpg
+
+Ni 1.00
+
+Ks 0.73 0.93 1.00
+
+Ns 3.32
+
+newmtl Pewter
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Pewter.jpg
+
+Ni 1.00
+Ks 0.84 0.92 1.00
+
+Ns 20.09
+
+newmtl Techno_4___Dirty
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Techno_4___Dirty.jpg
+
+Ni 1.00
+Ks 1.00 1.00 1.00
+
+Ns 1.00
+
+newmtl White_porcelaine
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd White_porcelaine.jpg
+
+Ni 1.00
+Ks 1.00 1.00 1.00
+
+Ns 164.02
+
+newmtl Yellow_marble0
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.38 0.38 0.38
+
+Tf 1.00 1.00 1.00
+
+map_Kd Yellow_marble0.jpg
+
+Ni 1.00
+
+Ks 1.00 1.00 1.00
+
+Ns 8.17
+
+newmtl Yellow_marble2
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Yellow_marble1.jpg
+
+Ni 1.00
+
+Ks 1.00 1.00 1.00
+
+Ns 8.17
+
+newmtl Yellow_marble4
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd Yellow_marble2.jpg
+
+Ni 1.00
+
+Ks 1.00 1.00 1.00
+
+Ns 8.17
+
+newmtl _V9_GenericRock
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd _V9_GenericRock.jpg
+
+Ni 1.00
+
+Ks 0.50 0.50 0.50
+
+Ns 8.17
+
+newmtl asphalt
+illum 4
+
+Kd 0.50 0.50 0.50
+
+Ka 0.50 0.50 0.50
+
+Tf 1.00 1.00 1.00
+
+map_Kd asphalt.jpg
+
+Ni 1.00
+
+Ks 0.64 0.64 0.64
+
+Ns 1.00

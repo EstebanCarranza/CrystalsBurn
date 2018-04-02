@@ -20,8 +20,8 @@ class auto
             object.auxRot = new THREE.Vector3(0, object.rotation.y, 0);
             //maxRot (0 = izq, 1 = der)
             object.maxRot = [];
-            object.maxRot[0] = new THREE.Vector3(0, 2,0);
-            object.maxRot[1] = new THREE.Vector3(0, 1,0);
+            object.maxRot[0] = new THREE.Vector3(0, 1.7,0);
+            object.maxRot[1] = new THREE.Vector3(0, 1.4,0);
             /*
             object.position.z = -1;
             object.position.y -= 5;

@@ -1,0 +1,7 @@
+newmtl textura_terrenoSG
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.45 0.45 0.45
+Tf 1.00 1.00 1.00
+map_Kd spyro_autumn_plains.png
+Ni 1.00
