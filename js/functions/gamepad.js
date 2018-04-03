@@ -43,7 +43,7 @@ class Keyboard
                 this.LB         [1] = "";
                 this.RT         [1] = "";
                 this.RB         [1] = "";
-                this.START      [1] = "";
+                this.START      [1] = "P";
                 this.SELECT     [1] = "";
             break;
             case 1: 

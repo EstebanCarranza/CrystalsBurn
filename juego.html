@@ -33,47 +33,70 @@
 		var isWorldReady = [];
 		var cajaX = [];
 		var pista = [];
+		var arbol = [];
 		var debug = true;
 		var objetosConColision = [];
 		var jugador = [];
+		var montanias = [];
+		var sky = [];
 
-		//Jugador(id, forwardLimit, yawLimit, leftRightLimit, topBottomLimit, 
-		//			spectatorPos, 
-		//			spectatorScl, 
-		//			spectatorRot)
+		/*
+			new Jugador
+			(
+				id, forwardLimit, yawLimit, leftRightLimit, topBottomLimit, velMax, velMin, 
+				spectatorPos, [Vector3]
+				spectatorScl, [Vector3]
+				spectatorRot  [Vector3]
+			);
+		*/
+		/*var velMin = 10;
 		var velMax = 500;
-		var vel = 10;
-		jugador[0] = new Jugador(0, vel, 1, 0.001, 1, velMax,
-			new THREE.Vector3(0, -10, -25),
-			new THREE.Vector3(0.001, 0.001, 0.001),
-			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
+		var velInc = 1;*/
+		//var movement = [forwardLimit, yawLimit, leftRightLimit, topBottomLimit, sensRot]
+		var movement = [-5, 1, 0.001, 1, 5];
+		//var velocity = [velMin, velInc, velMax, velFreno];
+		var velocity = [0, 1, 500, 10];
+		//var translate = new THREE.Vector3(1, -3.5, 0.5); // dentro del coche
+		var translate = new THREE.Vector3(0, -6, -15); // fuera del coche
+		//var scale = new THREE.Vector3(0.002, 0.002, 0.002);
+		var scale = new THREE.Vector3( 1, 1, 1);
+		var rotation = new THREE.Vector3(0, THREE.Math.degToRad(90), 0);
+		
+		jugador[0] = new Jugador(0, movement, velocity,
+			translate,
+			scale,
+			rotation);
 
-		jugador[1] = new Jugador(1, vel, 1, 0.01, 1, velMax,
-			new THREE.Vector3(0, -10, -25),
-			new THREE.Vector3(0.001, 0.001, 0.001),
-			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
+		jugador[1] = new Jugador(1, movement, velocity,
+			translate,
+			scale,
+			rotation);
 
-		jugador[2] = new Jugador(2,vel, 1, 0.01, 1, velMax,
-			new THREE.Vector3(0, -10, -25),
-			new THREE.Vector3(0.001, 0.001, 0.001),
-			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
+		jugador[2] = new Jugador(2, movement, velocity,
+			translate,
+			scale,
+			rotation);
 
-		jugador[3] = new Jugador(3, vel, 1, 0.01, 1, velMax,
-			new THREE.Vector3(0, -10, -25),
-			new THREE.Vector3(0.001, 0.001, 0.001),
-			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
+		jugador[3] = new Jugador(3, movement, velocity,
+			translate,
+			scale,
+			rotation);
 
 		var obj;
 		var obj2;
 
+var llanta = [];
 		function init() {
-			//carpeta, OBJ, MTL, player
-			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[0]);
-			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[1]);
-			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[2]);
-			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[3]);
-
 			
+			
+			//carpeta, OBJ, MTL, player
+			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[0]);
+			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[1]);
+			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[2]);
+			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[3]);
+			
+			
+			crear_cielo();
 			//debugger;
 			/*
 			obj2 = obj.clone();
@@ -87,7 +110,7 @@
 		}
 		$(document).ready(function () {
 			
-			init();
+			$("#menu-pausa").hide();
 			$("#empezarJuego").attr("disabled", true);
 
 			$("#empezarJuego").click(function () {
@@ -107,27 +130,34 @@
 				$("#canvas-GUI").hide();
 			}else $("#canvas-GUI").show();
 			});
-			
+			$("#btnContinuar").click(function(){
+
+				$("#menu-pausa").hide();
+			});
 		
 
 			enableGamepads();
 
 			//setupScene(1, "scene-section");
-			setupSceneForViewport(0, "scene-section-01", 20, 2, 0);
+				setupSceneForViewport(0, "scene-section-01", 30, 8, -1.5);
 
 			if (players >= 2)
-				setupSceneForViewport(1, "scene-section-02", 10, 2, 0);
+				setupSceneForViewport(1, "scene-section-02", 10, 8, -1.5);
 			if (players >= 3)
-				setupSceneForViewport(2, "scene-section-03", -10, 2, 0);
+				setupSceneForViewport(2, "scene-section-03", -10, 8, -1.5);
 
 			//jugadorX = new Jugador(3, -10, 5, -10);
 
 			if (players >= 4)
-				setupSceneForViewport(3, "scene-section-04", -20, 2, 0);
+				setupSceneForViewport(3, "scene-section-04", -30, 8, -1.5);
 
 			//cargar_cajas();
 			//cargar_carro(0, jugador[0]);
+			init();
 			crear_pista();
+			crear_arboles();
+			crear_montanias();
+			//crear_llantas();
 
 			document.addEventListener('keydown', onKeyDown);
 			document.addEventListener('keyup', onKeyUp);
@@ -176,13 +206,14 @@
 
 				$("#cargando").text("Cargando..." + (total / 2) + "%");
 				$("#pgb-render").val(total);
-				complete = true;
+				
 
 			} else {
 				
 				$("#cargando").text("Carga completada!");
 				$("#empezarJuego").attr("disabled", false);
 				$("#menu").remove();
+				complete = true;
 			}
 			//debugger;
 			//alert(inputXpad[0].A[2]);
@@ -195,6 +226,7 @@
 
 			if (ValidateAllLoadedModels(isWorldReady) && complete) {
 
+			
 				keysPlayers();
 
 
@@ -296,8 +328,8 @@
 
 		}
 
-
-
+		var borde = [-5, -5];
+		
 		function setupSceneForViewport(screenID, objectID, posX, posY, posZ) {
 
 			switch (players) {
@@ -305,13 +337,13 @@
 					var visibleSize = { width: window.innerWidth, height: window.innerHeight };
 					break;
 				case 2:
-					var visibleSize = { width: ((window.innerWidth / 2) - 10), height: window.innerHeight };
+					var visibleSize = { width: ((window.innerWidth / 2) + borde[0]), height: window.innerHeight };
 					break;
 				case 3:
-					var visibleSize = { width: (window.innerWidth / 2) - 10, height: (window.innerHeight / 2) - 10 };
+					var visibleSize = { width: ((window.innerWidth / 2) + borde[0]), height: (window.innerHeight / 2) + borde[1] };
 					break;
 				case 4:
-					var visibleSize = { width: (window.innerWidth / 2) - 10, height: (window.innerHeight / 2) - 10 };
+					var visibleSize = { width: ((window.innerWidth / 2) + borde[0]), height: (window.innerHeight / 2) + borde[1] };
 					break;
 				default:
 					var visibleSize = { width: window.innerWidth, height: window.innerHeight };
@@ -328,7 +360,7 @@
 			clock = new THREE.Clock();
 			scene = new THREE.Scene();
 			//camPlayers[0] = new THREE.PerspectivecamPlayers[0](75, visibleSize.width / visibleSize.height, 0.1, 100);
-			jugador[screenID].camPlayer = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 600);
+			jugador[screenID].camPlayer = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 20100);
 			jugador[screenID].camPlayer.position.x = posX;
 			jugador[screenID].camPlayer.position.y = posY;
 			jugador[screenID].camPlayer.position.z = posZ;
@@ -351,6 +383,13 @@
 			grid.position.y = -1;
 			scene.add(grid);
 
+
+			//scene.add(jugador[0].modelo);
+			//jugador[0].modelo.add(jugador[0].camPlayer);
+			
+			/*var pl = jugador[0].modelo;
+			pl.add(jugador[0].camPlayer);*/
+
 			for (var i = 0; i < players; i++)
 				scene.add(jugador[i].camPlayer);
 
@@ -364,7 +403,7 @@
 </head>
 
 <body>
-		<div id="menu" class="menu">
+		<div id="menu" class="menu menu-pausa">
                 <div id="mnuPrincipal" class="section">
                         <img class="banner" src="src/banner_02.png">
 						<div class="leaderboard">	
@@ -374,7 +413,18 @@
 						</div>
                 </div>
               
-        </div>
+		</div>
+		<div id="menu-pausa" class="menu menu-pausa">
+			<div id="mnuPausa" class="section">
+					<img class="banner" src="src/banner_02.png">
+					<div class="leaderboard">	
+						<label id="pausado" style="color:black;">Juego pausado</label>
+						<button id="btnContinuar" class="btn" type="button">Continuar</button>
+						
+					</div>
+			</div>
+		  
+	</div>
 <!--
 	<div id="menu" class="menu">
 		<div class="section">

@@ -21,8 +21,8 @@ class auto
             //maxRot (0 = izq, 1 = der)
             object.maxRot = [];
             //1.7,1.2
-            object.maxRot[0] = new THREE.Vector3(0, 3,0);
-            object.maxRot[1] = new THREE.Vector3(0, 0,0);
+            object.maxRot[0] = new THREE.Vector3(0, 1.7,0);
+            object.maxRot[1] = new THREE.Vector3(0, 1.3,0);
             /*
             object.position.z = -1;
             object.position.y -= 5;
@@ -33,9 +33,12 @@ class auto
             
             //this.modelo = object.clone();
             object.name= "auto-player-" + jugador.id;
-            jugador.modelo = object;
+            jugador.camPlayer.add(object);
+
+            
+            //jugador[0].modelo = object.clone();
             //this.jugador.add(this.modelo);
-            jugador.camPlayer.add(jugador.modelo);
+            //jugador.camPlayer.add(jugador.modelo);
 
             //jugador.modelo = object;
             //jugador.camPlayer.add(jugador.modelo);

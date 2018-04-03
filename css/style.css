@@ -9,7 +9,7 @@
 body
 {
     
-    color:white;
+    /*color:red;*/
     background:#2c3e50;
 }
 .title
@@ -28,7 +28,12 @@ body
     margin:0px;
     
     box-sizing: border-box;
+
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(0,0,0,0.75);
+    box-shadow:         0px 0px 5px 0px rgba(0,0,0,0.75);
 }
+
 
 #pgb-render
 {
@@ -41,7 +46,7 @@ body
 
 .viewport
 {
-    color:white;
+    color:red;
     background-color: rgba(30, 110, 106, 0.5);
     text-align: center;
 }
