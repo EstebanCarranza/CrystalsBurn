@@ -1,452 +1,55 @@
+<!DOCTYPE html>
 <html>
-
 <head>
-
-	<title>Crystals Burns</title>
 	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Page Title</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="js/libs/three/three.js"></script>
-	<script type="text/javascript" src="js/libs/three/MTLLoader.js"></script>
-	<script type="text/javascript" src="js/libs/three/OBJLoader.js"></script>
-	<script type="text/javascript" src="js/functions/util.js"></script>
-	<script type="text/javascript" src="js/class/player.js"></script>
-	<script type="text/javascript" src="js/functions/gamepad.js"></script>
-	<script type="text/javascript" src="js/class/modelos.js"></script>
-	<script type="text/javascript" src="js/class/autos.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/menu-principal.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
-
-
-	<script type="text/javascript">
-
-		var scene;
-		var renderer;
-		//var viewports = [];
-		//var camPlayers = [];
-		var players = 1;
-		var clock;
-		var deltaTime;
-		var keys = {};
-		var isWorldReady = [];
-		var cajaX = [];
-		var debug = true;
-		var objetosConColision = [];
-		var jugador = [];
-
-		//Jugador(id, forwardLimit, yawLimit, leftRightLimit, topBottomLimit, 
-		//			spectatorPos, 
-		//			spectatorScl, 
-		//			spectatorRot)
-		var velMax = 500;
-		jugador[0] = new Jugador(0, velMax, 1, 0.1, 1,
-			new THREE.Vector3(0, -10, -25),
-			new THREE.Vector3(0.001, 0.001, 0.001),
-			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
-
-		jugador[1] = new Jugador(1, velMax, 1, 0.1, 1,
-			new THREE.Vector3(0, -10, -25),
-			new THREE.Vector3(0.001, 0.001, 0.001),
-			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
-
-		jugador[2] = new Jugador(2,velMax, 1, 0.1, 1,
-			new THREE.Vector3(0, -10, -25),
-			new THREE.Vector3(0.001, 0.001, 0.001),
-			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
-
-		jugador[3] = new Jugador(3, velMax, 1, 0.1, 1,
-			new THREE.Vector3(0, -10, -25),
-			new THREE.Vector3(0.001, 0.001, 0.001),
-			new THREE.Vector3(0, THREE.Math.degToRad(90), 0));
-
-		var obj;
-
-		function init() {
-			//carpeta, OBJ, MTL, player
-			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[0]);
-			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[1]);
-			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[2]);
-			new auto("assets/bmw/", "BMW_M3_GTR.obj", "BMW_M3_GTR.mtl", jugador[3]);
-
-			new OBJ_modelX("assets/maps/Bridge/", "Bridge_n.obj", "Bridge_n.mtl", obj,
-				new THREE.Vector3(0, -50, 0),
-				new THREE.Vector3(120, 120, 120),
-				new THREE.Vector3(0, 0, 0)
-			);
-			
-
-
-			//jugador[1].modelo = bmw;
-			//scene.add(jugador[1].modelo);
-			//jugador[1].camPlayer.add(jugador[1].modelo);
-
-		}
-		$(document).ready(function () {
-			
-			init();
-			$("#empezarJuego").attr("disabled", true);
-
-			$("#empezarJuego").click(function () {
-				$("#menu").remove();
-				
-			});
-			$("#velMaxBtn").click(function(){
-				var jfl = $("#velMax").val();
-				jfl = parseFloat(jfl);
-				//debugger;
-				if(!isNaN(jfl))
-				{
-					jugador[0].forwardLimit = jfl;
-				}
-				
-				if ($('#LOGS').prop('checked')) {
-				$("#canvas-GUI").hide();
-			}else $("#canvas-GUI").show();
-			});
-			
-		
-
-			enableGamepads();
-
-			//setupScene(1, "scene-section");
-			setupSceneForViewport(0, "scene-section-01", 10, 10, 10);
-
-			if (players >= 2)
-				setupSceneForViewport(1, "scene-section-02", 10, 10, -10);
-			if (players >= 3)
-				setupSceneForViewport(2, "scene-section-03", -10, 10, 10);
-
-			//jugadorX = new Jugador(3, -10, 5, -10);
-
-			if (players >= 4)
-				setupSceneForViewport(3, "scene-section-04", -10, 10, -10);
-
-			cargar_cajas();
-			//cargar_carro(0, jugador[0]);
-
-
-			//alert("OK");
-			render();
-
-			document.addEventListener('keydown', onKeyDown);
-			document.addEventListener('keyup', onKeyUp);
-		});
-
-
-
-		function onKeyDown(event) {
-
-			keys[String.fromCharCode(event.keyCode)] = true;
-
-		}
-		function onKeyUp(event) {
-			keys[String.fromCharCode(event.keyCode)] = false;
-		}
-
-		var camPosition = "";
-		var carPosition = "";
-
-
-		function ValidateAllLoadedModels(isWorldReadyLocal) {
-			$("#messages").html(isWorldReady.length);
-			var complete = true;
-			for (var i = 0; i < isWorldReadyLocal.length; i++)
-				complete = complete * isWorldReadyLocal[i];
-				
-			
-			if (!complete)
-				alert("Cuidado, hay modelos que no cargaron!");
-
-			return complete;
-		}
-
-		var total = 0;
-		var complete = false;
-
-		function render() {
-
-			total = requestAnimationFrame(render);
-			if (total <= 200) {
-
-				$("#cargando").text("Cargando..." + (total / 2) + "%");
-				$("#pgb-render").val(total);
-				complete = true;
-
-			} else {
-				
-				$("#cargando").text("Carga completada!");
-				$("#empezarJuego").attr("disabled", false);
-			}
-			//debugger;
-			//alert(inputXpad[0].A[2]);
-			//			$("#test-retroceso").text(jugador[0].inputXpad.A[2] + "  " + (jugador[0].inputXpad.sensibilidad * -1));
-
-
-			deltaTime = clock.getDelta();
-
-
-
-			if (ValidateAllLoadedModels(isWorldReady) && complete) {
-
-				keysPlayers();
-				for (var i = 0; i < players; i++) {
-					camPosition = "Player[" + (i + 1) + "] Posicion de camara [" +
-						Math.round(jugador[i].camPlayer.position.x) + "," +
-						Math.round(jugador[i].camPlayer.position.y) + "," +
-						Math.round(jugador[i].camPlayer.position.z) + "]"
-						;
-
-					$("#P" + i + "-vwp").text(camPosition);
-					$("#P" + i + "-rot").html(
-						"Rotacion del auto: [" +
-						jugador[i].camPlayer.children[0].rotation.x + " , " +
-						jugador[i].camPlayer.children[0].rotation.y + " , " +
-						jugador[i].camPlayer.children[0].rotation.z + "] <br>" +
-						"MaxRot[0](IZQ) [" +
-						jugador[i].camPlayer.children[0].maxRot[0].x + " , " +
-						jugador[i].camPlayer.children[0].maxRot[0].y + " , " +
-						jugador[i].camPlayer.children[0].maxRot[0].z + "] <br>" +
-						"MaxRot[1](DER) [" +
-						jugador[i].camPlayer.children[0].maxRot[1].x + " , " +
-						jugador[i].camPlayer.children[0].maxRot[1].y + " , " +
-						jugador[i].camPlayer.children[0].maxRot[1].z + "] <br>" +
-						"ForwardLimit: [ " + 
-						jugador[i].forwardLimit + " ]<br>" +
-						
-						"");
-				}
-
-				/*
-								$("#P0-rot").html
-								(
-									"Rotacion izq [" + jugador[0].camPlayer.children[0].rotation.y + "] <br>" +
-									"Rotacion maxRot[0] [" + jugador[0].camPlayer.children[0].maxRot[0].y + "] <br>" +
-									"Rotacion maxRot[1] [" + jugador[0].camPlayer.children[0].maxRot[1].y + "]"
-								);*/
-				//jugador[0].modelo.rotation += THREE.Math.degToRad(10);
-
-				for (var j = 0; j < players; j++)
-					for (var i = 0; i < jugador[j].rayos.length; i++) {
-						//Param1: desde donde lanzamos el rayo (vector)
-						//Param2: hacia donde (direccion del vector)
-
-						jugador[j].raycaster.set(jugador[j].camPlayer.position, jugador[j].rayos[i]);
-
-						//Verificamos si existe la colisión
-						//Param1: Objeto(s) "colisionables"
-						//Param2: Si queremos validar la colisión con los hijos 
-						/*
-							para objetos
-								var colisiones = raycaster.intersectObject(objeto);
-							para arreglos
-								var colisiones = raycaster.intersectObjects(objetosConColision, false);
-		
-							para colision con hijos
-							var colisiones = raycaster.intersectObjects(objetosConColision, true);
-		
-						*/
-						var colisiones = jugador[j].raycaster.intersectObjects(objetosConColision, true);
-
-						//si el arreglo es mayor a cero entonces si hay colision
-						if (colisiones.length > 0 && colisiones[0].distance < 1) {
-							jugador[j].colision = true;
-							console.log("player" + j + " colisionando " + jugador[j].colision);
-
-							//jugador[j].camPlayer.translateZ(-jugador[j].forwardLimit * deltaTime);
-							//jugador[j].forward = jugador[j].forwardLimit;
-							
-
-						}
-						else
-						{
-							jugador[j].colision = false;
-							//console.log("player" + j + " colisionando " + jugador[j].colision);
-						}
-					}
-				for (var i = 0; i < players; i++) {
-					jugador[i].camPlayer.rotation.y += jugador[i].yaw * deltaTime;
-					jugador[i].camPlayer.translateZ(jugador[i].forward * deltaTime);
-					jugador[i].camPlayer.translateX(jugador[i].leftRight);
-					jugador[i].camPlayer.translateY(jugador[i].topBottom);
-
-				}
-
-				
-			}
-
-			//debugger;
-			for (var i = 0; i < players; i++)
-				jugador[i].viewport.render(scene, jugador[i].camPlayer);
-
-			/*if(jugador[3].viewport.render!=null)
-				$("#test-00").text("OK");*/
-			//debugger;
-
-			//debugger;
-			//$("#test-00").text(render.arguments[0]);
-
-		}
-
-
-
-		function setupSceneForViewport(screenID, objectID, posX, posY, posZ) {
-
-			switch (players) {
-				case 1:
-					var visibleSize = { width: window.innerWidth, height: window.innerHeight };
-					break;
-				case 2:
-					var visibleSize = { width: ((window.innerWidth / 2) - 10), height: window.innerHeight };
-					break;
-				case 3:
-					var visibleSize = { width: (window.innerWidth / 2) - 10, height: (window.innerHeight / 2) - 10 };
-					break;
-				case 4:
-					var visibleSize = { width: (window.innerWidth / 2) - 10, height: (window.innerHeight / 2) - 10 };
-					break;
-				default:
-					var visibleSize = { width: window.innerWidth, height: window.innerHeight };
-					break;
-			}
-
-
-			$("#cvP" + screenID).width(visibleSize.width);
-			$("#cvP" + screenID).height(visibleSize.height);
-
-
-			//var visibleSize = { width: 100, height: 100};
-
-			clock = new THREE.Clock();
-			scene = new THREE.Scene();
-			//camPlayers[0] = new THREE.PerspectivecamPlayers[0](75, visibleSize.width / visibleSize.height, 0.1, 100);
-			jugador[screenID].camPlayer = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 600);
-			jugador[screenID].camPlayer.position.x = posX;
-			jugador[screenID].camPlayer.position.y = posY;
-			jugador[screenID].camPlayer.position.z = posZ;
-			jugador[screenID].camPlayer.name = "player" + screenID;
-
-			jugador[screenID].viewport = new THREE.WebGLRenderer({ precision: "mediump" });
-			//renderer.setClearColor(new THREE.Color(0, 0, 0));
-			jugador[screenID].viewport.setClearColor(new THREE.Color(0.1, 0.5, 0.6));
-			jugador[screenID].viewport.setPixelRatio(visibleSize.width / visibleSize.height);
-			jugador[screenID].viewport.setSize(visibleSize.width, visibleSize.height);
-
-			var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 1.0);
-			scene.add(ambientLight);
-
-			var directionalLight = new THREE.DirectionalLight(new THREE.Color(1, 1, 1), 1.0);
-			directionalLight.position.set(0, 0, 1);
-			scene.add(directionalLight);
-
-			var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
-			grid.position.y = -1;
-			scene.add(grid);
-
-			for (var i = 0; i < players; i++)
-				scene.add(jugador[i].camPlayer);
-
-
-			$("#" + objectID).append(jugador[screenID].viewport.domElement);
-		}
-
-
-
-	</script>
-</head>
-
-<body>
-		<div id="menu" class="menu">
-                <div id="mnuPrincipal" class="section">
-                        <img class="banner" src="src/banner_02.png">
-						<div class="leaderboard">	
-							<label id="cargando" style="color:black;">Cargando...</label>
-                            <progress id="pgb-render" value="0" max="200"></progress>
-                            <button id="empezarJuego" class="btn" type="button">Empezar el juego</button>
-						</div>
-                </div>
-              
-        </div>
-<!--
-	<div id="menu" class="menu">
-		<div class="section">
-			<img class="imgMenu" src="src/menu.jpeg">
-			<input class="input" type="nombre-p1" placeholder="Player 1"/>
-			<input class="input" type="nombre-p2" placeholder="Player 2"/>
-			<input class="input" type="nombre-p3" placeholder="Player 3"/>
-			<input class="input" type="nombre-p4" placeholder="Player 4"/>
-			
-			<button id="empezarJuego" class="btn" type="button">Empezar el juego</button>
-			<button class="btn" type="button">Salir</button>
-			<br>
-			<label id="cargando">Cargando...</label>
-			<progress id="pgb-render" value="0" max="200"></progress>
-		</div>
-	</div>
 	
-	<span class='GUI' id="scene-section-01">
-			1
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="test-01" class="">Viewport [0]</div>
-			<span class="">Controles: WASD-QE + Controller</span>
-			<div class="" id="auto-p1">H</div>
-		</span>
-		<span class='GUI' id="scene-section-02">
-				<img src="src/image-02.png" style="position:absolute; z-index: 1; width:50px; " />
-				<div id="test-02" class="viewport">Viewport [1]</div>
-				<span class="controles">Controles: TFGH-RY</span>
-			</span>	
-			<span class='GUI' id="scene-section-03">
-					<img src="src/image-03.png" style="bottom:0px; position:absolute; z-index: 1; width:50px; " />
-					<div id="test-03" class="viewport">Viewport [2]</div>
-					<span class="controles-b">Controles: IJKL-UO</span>
-				</span>	
-				<span class='GUI' id="scene-section-04">
-						<img src="src/image-04.png" style="bottom: 0px; position:absolute; z-index: 1; width:50px; " />
-						<div id="test-04" class="viewport">Viewport [3]</div>
-						<span class="controles-b">Controles: 1234-56</span>
-					</span>
-				-->
-	<span class='GUI cvP0' id="scene-section-01"></span>
-	<span class='GUI cvP1' id="scene-section-02"></span>
-	<span class='GUI cvP2' id="scene-section-03"></span>
-	<span class='GUI cvP3' id="scene-section-04"></span>
-	<div id="canvas-GUI" class="canvas-GUI">
-		<div id="cvP0">
-			1<div id="messages"></div>
-			<input id="velMax" type="text" placeholder="velocidad"/>
-			<label>Apagar estadisticas<input id="LOGS" type="checkbox"/></label>
-			<button id="velMaxBtn">Aplicar</button>
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="P0-vwp" class="">Viewport [0]</div>
-			<span id="P0-ctr" class="">Controller Xbox One</span>
-			<div id="P0-rot" class="">H</div>
-			
-		</div>
-
-		<div id="cvP1">2
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="P1-vwp" class="">Viewport [0]</div>
-			<span id="P1-ctr" class="">Controles: WASD-QE + Controller</span>
-			<div id="P1-rot" class="">H</div>
-
-		</div>
-		<div id="cvP2">3
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="P2-vwp" class="">Viewport [0]</div>
-			<span id="P2-ctr" class="">Controles: WASD-QE + Controller</span>
-			<div id="P2-rot" class="">H</div>
-
-		</div>
-		<div id="cvP3">4
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="P3-vwp" class="">Viewport [0]</div>
-			<span id="P3-ctr" class="">Controles: WASD-QE + Controller</span>
-			<div id="P3-rot" class="">H</div>
-
-		</div>
-	</div>
+</head>
+<body style="background-color: white">
+		<div id="canvas-GUI" class="canvas-GUI">
+				<div id="cvP0">
+					<div id="P0-vwp" class="estatus-player">Viewport [0]</div>
+					<label class="lugar">1st</label>
+					<label class="velocimetro">100 km/h</label>
+					<input id="velMax" type="text" placeholder="velocidad"/>
+					<label>Apagar estadisticas<input id="LOGS" type="checkbox"/></label>
+					<button id="velMaxBtn">Aplicar</button>
+					<img src="src/image-01.png" style="z-index: 1; width:50px; " />
+					
+					<span id="P0-ctr" class="">Controller Xbox One + WASD</span>
+					<div id="P0-rot" class="">H</div>
+					
+				</div>
+		
+				<div id="cvP1">
+					<label class="lugar">2nd</label>
+					
+					<img src="src/image-01.png" style="z-index: 1; width:50px; " />
+					<div id="P1-vwp" class="">Viewport [0]</div>
+					<span id="P1-ctr" class="">Controller Xbox One + Flechas direccionales</span>
+					<div id="P1-rot" class="">H</div>
+		
+				</div>
+				<div id="cvP2">
+					<label class="lugar">3rd</label>
+					<img src="src/image-01.png" style="z-index: 1; width:50px; " />
+					<div id="P2-vwp" class="">Viewport [0]</div>
+					<span id="P2-ctr" class="">Controller Xbox One + Flechas de NUMPAD</span>
+					<div id="P2-rot" class="">H</div>
+		
+				</div>
+				<div id="cvP3">
+					<label class="lugar">4th</label>
+					<img src="src/image-01.png" style="z-index: 1; width:50px; " />
+					<div id="P3-vwp" class="">Viewport [0]</div>
+					<span id="P3-ctr" class="">Controller Xbox One + UHJK</span>
+					<div id="P3-rot" class="">H</div>
+		
+				</div>
+			</div>	
 </body>
-
 </html>

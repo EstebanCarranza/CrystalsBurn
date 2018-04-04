@@ -1,6 +1,10 @@
 class Jugador {
-	constructor(id, movement, velocity, spectatorPos, spectatorScl, spectatorRot) {
+	constructor(id, movement, velocity, spectatorPos, spectatorScl, spectatorRot, data) {
 		this.id = id;
+		this.name = data[0];
+		this.progreso = 0;
+		this.place = 1;
+		this.totalCristales = 0;
 		this.forward = 0;
 		this.yaw = 0;
 		this.sensRot = movement[4];
@@ -36,6 +40,19 @@ class Jugador {
 		this.inputXpad[1] = new Keyboard(id);*/
 		this.inputXpad = new Gamepad(id);
 		this.inputKpad = new Keyboard(id);
+/*
+		function getPlace(place)
+		{
+			switch(place)
+			{
+				case 0: return "N/A"; break;
+				case 1: return "1st"; break;
+				case 2: return "2nd"; break;
+				case 3: return "3rd"; break;
+				default: return (place + "th"); break;
+			}
+		}
+		*/
 	}
 };
 

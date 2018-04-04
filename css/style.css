@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
 *
 {
     font-family: 'Roboto', Times, serif;
@@ -112,8 +113,97 @@ body
     bottom:0%;
     right:0%;
 }
-
+.quad-shadow
+{
+    background-color: rgba(44, 62, 80, 0.8);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 30px;
+    font-weight: 900;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(0,0,0,0.75);
+    box-shadow:         0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+.lugar
+{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 30px;
+    font-weight: 900;
+    padding: 2%;
+    margin:2%;
+    background-color: rgba(44, 62, 80, 0.8);
+    width:20%;
+    display:inline-block;
+    box-sizing: border-box;
+        
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(0,0,0,0.75);
+    box-shadow:         0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+.velocimetro
+{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    padding: 2%;
+    margin:2%;
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    box-sizing: border-box;
+}
+.estatus-player
+{
+    position: absolute;
+    padding: 1%;
+    display:none;
+    left:50%;
+    margin-top:0px;
+    background-color: rgba(44, 62, 80, 0.8);
+    width:50%;
+}
+.name-player
+{
+    font-size: 20px;
+    position: absolute;
+    top:0px;
+    right: 0%;
+    padding: 1%;
+    margin-top:2%;
+    margin-right:2%;
+    background-color: rgba(44, 62, 80, 0.8);
+    width:25%;
+}
+.contador-cristales
+{
+    
+    font-size: 10px;
+    position: absolute;
+    bottom:0px;
+    right: 0%;
+    padding: 2%;
+    box-sizing: border-box;
+    margin-bottom:2%;
+    margin-right:2%;
+    background-color: rgba(44, 62, 80, 0.8);
+    width:10%;
+    display:table;
+}
+.contador-cristales > img
+{
+    width:100%;
+    
+}
+.contador-cristales *
+{
+    font-family: 'Press Start 2P', cursive;
+    display:table-cell;
+    vertical-align: middle;
+}
+.barra-progreso
+{
+    
+}
 /*
+
 .controles-player2
 {
     text-align: center;

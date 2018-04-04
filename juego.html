@@ -39,6 +39,8 @@
 		var jugador = [];
 		var montanias = [];
 		var sky = [];
+		var final = -19350;
+		
 
 		/*
 			new Jugador
@@ -62,30 +64,39 @@
 		var scale = new THREE.Vector3( 1, 1, 1);
 		var rotation = new THREE.Vector3(0, THREE.Math.degToRad(90), 0);
 		
+
 		jugador[0] = new Jugador(0, movement, velocity,
 			translate,
 			scale,
-			rotation);
+			rotation,
+			["player1"]
+			);
 
 		jugador[1] = new Jugador(1, movement, velocity,
 			translate,
 			scale,
-			rotation);
+			rotation,
+			["player2"]
+			);
 
 		jugador[2] = new Jugador(2, movement, velocity,
 			translate,
 			scale,
-			rotation);
+			rotation,
+			["player3"]
+			);
 
 		jugador[3] = new Jugador(3, movement, velocity,
 			translate,
 			scale,
-			rotation);
+			rotation,
+			["player4"]
+			);
 
 		var obj;
 		var obj2;
 
-var llanta = [];
+		var llanta = [];
 		function init() {
 			
 			
@@ -198,7 +209,8 @@ var llanta = [];
 
 		var total = 0;
 		var complete = false;
-
+		var place = "";
+		var maxPlayer;
 		function render() {
 
 			total = requestAnimationFrame(render);
@@ -231,13 +243,50 @@ var llanta = [];
 
 
 				for (var i = 0; i < players; i++) {
-					camPosition = "Player[" + (i + 1) + "] Posicion de camara [" +
-						Math.round(jugador[i].camPlayer.position.x) + "," +
-						Math.round(jugador[i].camPlayer.position.y) + "," +
-						Math.round(jugador[i].camPlayer.position.z) + "]"
-						;
+					
+					if(jugador[i].forwardLimit < 0)
+					
+						$("#velocimetro-0"+i).text("Reverse");
+					else
+						$("#velocimetro-0"+i).text(jugador[i].forwardLimit + " Km/h");
+					
+					$("#P" + i + "-vwp").text(jugador[i].name);
 
-					$("#P" + i + "-vwp").text(camPosition);
+					if(jugador[i].progreso <= 100)
+						jugador[i].progreso = ((jugador[i].camPlayer.position.z/final)*100).toFixed(2);
+					
+					$("#progreso-0"+i).text(jugador[i].progreso + "%");
+					$("#total-cristales-0"+i).text(jugador[i].totalCristales);
+					
+					maxPlayer = Math.max(jugador[0].progreso, jugador[1].progreso, jugador[2].progreso, jugador[3].progreso);
+					switch(maxPlayer)
+					{
+						case jugador[0].progreso:
+							jugador[0].place = 1; jugador[1].place = 2; jugador[2].place = 2; jugador[3].place = 2;
+						break;
+						case jugador[1].progreso:
+							jugador[1].place = 1; jugador[0].place = 2; jugador[2].place = 2; jugador[3].place = 2;
+						break;
+						case jugador[2].progreso:
+							jugador[2].place = 1; jugador[0].place = 2; jugador[1].place = 2; jugador[3].place = 2;
+						break;
+						case jugador[3].progreso:
+							jugador[3].place = 1; jugador[0].place = 2; jugador[1].place = 2; jugador[2].place = 2;
+						break;
+					}
+
+					switch(jugador[i].place)
+					{
+						case 0: place = "N/A"; break;
+						case 1: place = "1st"; break;
+						case 2: place = "2nd"; break;
+						case 3: place = "3rd"; break;
+						default: place = (jugador[i].place + "th"); break;
+					}
+					$("#place-0"+i).text(place + " maxPlayer "+ maxPlayer);
+					
+					
+					/*
 					$("#P" + i + "-rot").html(
 						"Rotacion del auto: [" +
 						jugador[i].camPlayer.children[0].rotation.x + " , " +
@@ -251,10 +300,10 @@ var llanta = [];
 						jugador[i].camPlayer.children[0].maxRot[1].x + " , " +
 						jugador[i].camPlayer.children[0].maxRot[1].y + " , " +
 						jugador[i].camPlayer.children[0].maxRot[1].z + "] <br>" +
-						"ForwardLimit: [ " + 
-						jugador[i].forwardLimit + " ]<br>" +
-						
 						"");
+							*/
+						
+					
 				}
 
 				/*
@@ -360,7 +409,7 @@ var llanta = [];
 			clock = new THREE.Clock();
 			scene = new THREE.Scene();
 			//camPlayers[0] = new THREE.PerspectivecamPlayers[0](75, visibleSize.width / visibleSize.height, 0.1, 100);
-			jugador[screenID].camPlayer = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 20100);
+			jugador[screenID].camPlayer = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 20500);
 			jugador[screenID].camPlayer.position.x = posX;
 			jugador[screenID].camPlayer.position.y = posY;
 			jugador[screenID].camPlayer.position.z = posZ;
@@ -409,7 +458,7 @@ var llanta = [];
 						<div class="leaderboard">	
 							<label id="cargando" style="color:black;">Cargando...</label>
                             <progress id="pgb-render" value="0" max="200"></progress>
-                            <button id="empezarJuego" class="btn" type="button">Empezar el juego</button>
+                            <button style="display:none;" id="empezarJuego" class="btn" type="button">Empezar el juego</button>
 						</div>
                 </div>
               
@@ -425,83 +474,62 @@ var llanta = [];
 			</div>
 		  
 	</div>
-<!--
-	<div id="menu" class="menu">
-		<div class="section">
-			<img class="imgMenu" src="src/menu.jpeg">
-			<input class="input" type="nombre-p1" placeholder="Player 1"/>
-			<input class="input" type="nombre-p2" placeholder="Player 2"/>
-			<input class="input" type="nombre-p3" placeholder="Player 3"/>
-			<input class="input" type="nombre-p4" placeholder="Player 4"/>
-			
-			<button id="empezarJuego" class="btn" type="button">Empezar el juego</button>
-			<button class="btn" type="button">Salir</button>
-			<br>
-			<label id="cargando">Cargando...</label>
-			<progress id="pgb-render" value="0" max="200"></progress>
-		</div>
-	</div>
-	
-	<span class='GUI' id="scene-section-01">
-			1
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="test-01" class="">Viewport [0]</div>
-			<span class="">Controles: WASD-QE + Controller</span>
-			<div class="" id="auto-p1">H</div>
-		</span>
-		<span class='GUI' id="scene-section-02">
-				<img src="src/image-02.png" style="position:absolute; z-index: 1; width:50px; " />
-				<div id="test-02" class="viewport">Viewport [1]</div>
-				<span class="controles">Controles: TFGH-RY</span>
-			</span>	
-			<span class='GUI' id="scene-section-03">
-					<img src="src/image-03.png" style="bottom:0px; position:absolute; z-index: 1; width:50px; " />
-					<div id="test-03" class="viewport">Viewport [2]</div>
-					<span class="controles-b">Controles: IJKL-UO</span>
-				</span>	
-				<span class='GUI' id="scene-section-04">
-						<img src="src/image-04.png" style="bottom: 0px; position:absolute; z-index: 1; width:50px; " />
-						<div id="test-04" class="viewport">Viewport [3]</div>
-						<span class="controles-b">Controles: 1234-56</span>
-					</span>
-				-->
+
 	<span class='GUI cvP0' id="scene-section-01"></span>
 	<span class='GUI cvP1' id="scene-section-02"></span>
 	<span class='GUI cvP2' id="scene-section-03"></span>
 	<span class='GUI cvP3' id="scene-section-04"></span>
 	<div id="canvas-GUI" class="canvas-GUI">
 		<div id="cvP0">
-			1<div id="messages"></div>
-			<input id="velMax" type="text" placeholder="velocidad"/>
-			<label>Apagar estadisticas<input id="LOGS" type="checkbox"/></label>
-			<button id="velMaxBtn">Aplicar</button>
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="P0-vwp" class="">Viewport [0]</div>
-			<span id="P0-ctr" class="">Controller Xbox One + WASD</span>
-			<div id="P0-rot" class="">H</div>
+			<div id="messages" class="estatus-player"></div>
+			<label class="estatus-player">Apagar estadisticas<input id="LOGS" type="checkbox"/></label>
+			<button class="estatus-player" id="velMaxBtn">Aplicar</button>
+			<input id="velMax" type="text" placeholder="velocidad" class="estatus-player"/>
+
 			
+			<label class="lugar" id="place-00"></label>
+			<label id="progreso-00" class="quad-shadow barra-progreso"></label>
+			<label id="P0-vwp" class="quad-shadow name-player"></label>
+			<label id="velocimetro-00" class="velocimetro quad-shadow"></label>
+			<span class="contador-cristales quad-shadow">
+				<img src="src/crystal.png"/>
+				<label> x </label>
+				<label id="total-cristales-00"></label>
+			</span>
 		</div>
 
-		<div id="cvP1">2
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="P1-vwp" class="">Viewport [0]</div>
-			<span id="P1-ctr" class="">Controller Xbox One + Flechas direccionales</span>
-			<div id="P1-rot" class="">H</div>
-
+		<div id="cvP1">
+			<label class="lugar" id="place-01"></label>
+			<label id="progreso-01" class="quad-shadow barra-progreso"></label>
+			<label id="P1-vwp" class="quad-shadow name-player"></label>
+			<label id="velocimetro-01" class="velocimetro quad-shadow"></label>
+			<span class="contador-cristales quad-shadow">
+				<img src="src/crystal.png"/>
+				<label> x </label>
+				<label id="total-cristales-01"></label>
+			</span>
 		</div>
-		<div id="cvP2">3
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="P2-vwp" class="">Viewport [0]</div>
-			<span id="P2-ctr" class="">Controller Xbox One + Flechas de NUMPAD</span>
-			<div id="P2-rot" class="">H</div>
-
+		<div id="cvP2">
+			<label class="lugar" id="place-02"></label>
+			<label id="progreso-02" class="quad-shadow barra-progreso"></label>
+			<label id="P2-vwp" class="quad-shadow name-player"></label>
+			<label id="velocimetro-02" class="velocimetro quad-shadow"></label>
+			<span class="contador-cristales quad-shadow">
+				<img src="src/crystal.png"/>
+				<label> x </label>
+				<label id="total-cristales-02"></label>
+			</span>
 		</div>
-		<div id="cvP3">4
-			<img src="src/image-01.png" style="z-index: 1; width:50px; " />
-			<div id="P3-vwp" class="">Viewport [0]</div>
-			<span id="P3-ctr" class="">Controller Xbox One + UHJK</span>
-			<div id="P3-rot" class="">H</div>
-
+		<div id="cvP3">
+			<label class="lugar" id="place-03"></label>
+			<label id="progreso-03" class="quad-shadow barra-progreso"></label>
+			<label id="P3-vwp" class="quad-shadow name-player"></label>
+			<label id="velocimetro-03" class="velocimetro quad-shadow"></label>
+			<span class="contador-cristales quad-shadow">
+				<img src="src/crystal.png"/>
+				<label> x </label>
+				<label id="total-cristales-03"></label>
+			</span>
 		</div>
 	</div>
 </body>
