@@ -283,6 +283,25 @@ body
     width:48%;
 
 }
+a
+{
+    font-family: 'Press Start 2P', cursive;
+    text-decoration: none;
+    color:whitesmoke;
+    font-size: 20px;
+}
+a:hover
+{
+    transform: scale(1.4);
+}
+a:visited
+{
+    text-decoration: none;
+    color:whitesmoke;
+
+    
+    
+}
 @media only screen and (max-width: 500px) {
     .section
     {
