@@ -129,7 +129,8 @@ body
     font-size: 30px;
     font-weight: 900;
     padding: 2%;
-    margin:2%;
+    margin-top:4%;
+    margin-left:2%;
     background-color: rgba(44, 62, 80, 0.8);
     width:20%;
     display:inline-block;
@@ -152,14 +153,34 @@ body
 }
 .estatus-player
 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 50px;
     position: absolute;
     padding: 1%;
-    display:none;
-    left:50%;
-    margin-top:0px;
+    top:50%;
+    /*left:50%;*/
+    /*margin-left:auto;*/
+    text-align: center;
+    left:0px;
+    width:100%;
+    box-sizing: border-box;
+    /*right:50%;*/
     background-color: rgba(44, 62, 80, 0.8);
-    width:50%;
+
+    animation-duration: 1s;
+    animation-name: slidein;
+    /*animation-iteration-count: infinite;*/
+    
 }
+@keyframes slidein {
+    from {
+      transform:scale(0);
+    }
+  
+    to {
+        transform:scale(1);
+    }
+  }
 .name-player
 {
     font-size: 20px;
@@ -167,7 +188,7 @@ body
     top:0px;
     right: 0%;
     padding: 1%;
-    margin-top:2%;
+    margin-top:4%;
     margin-right:2%;
     background-color: rgba(44, 62, 80, 0.8);
     width:25%;
@@ -200,8 +221,90 @@ body
 }
 .barra-progreso
 {
+    font-size: 10px;
+    position: absolute;
+    width:100%;
+    top:0px;
+    left:0px;
+    text-align: center;
+    padding: 1%;
+    box-sizing: border-box;
+
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: inset 0px 0px 250px 50px rgba(44, 62, 80,0.75);
+    -moz-box-shadow: inset 0px 0px 250px 50px rgba(44, 62, 80,0.75);
+    box-shadow: inset 0px 0px 250px 50px rgba(44, 62, 80,0.75);
+}
+.progreso-carrera
+{
+    position: absolute;
+    height: 2.5%;
+    top:calc(50% - (2.5%/2));
+    width:100%;
+    z-index:5;
     
 }
+.places
+{
+    
+    top:6%;
+    left:0px;
+    background-color: rgba(0, 0, 0, 0.0);
+    width:32%;
+    position:absolute;
+    overflow: hidden;
+}
+.places *
+{
+    font-size: 10px;
+    padding:0.5%;
+}
+.quad-place
+{
+    width:60%;
+    box-sizing: border-box;
+}
+
+.q-place-00
+{
+    width:100%;  
+    padding-top:4%; 
+    padding-bottom:4%; 
+}
+
+.quad-place .lugar
+{
+    width:30%;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.0);
+    -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0,0.0);
+    -moz-box-shadow:    0px 0px 0px 0px rgba(0, 0, 0,0.0);
+    box-shadow:         0px 0px 0px 0px rgba(0, 0, 0,0.0);
+}
+.quad-place .place-00
+{
+    font-size: 22px;
+    width:35%;
+}
+.quad-place .name-player-00
+{
+    font-size: 16px;
+}
+.quad-place .name-player
+{
+    /*top:0px;
+    right:0px;
+    margin:0px;
+    position: absolute;*/
+    position:relative;
+    width:65%;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.0);
+    -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0,0.0);
+    -moz-box-shadow:    0px 0px 0px 0px rgba(0, 0, 0,0.0);
+    box-shadow:         0px 0px 0px 0px rgba(0, 0, 0,0.0);
+}
+
 /*
 
 .controles-player2

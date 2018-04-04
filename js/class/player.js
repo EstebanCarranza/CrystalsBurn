@@ -131,6 +131,9 @@ function keysForPlayer1() {
 	//</PLAYER 1>
 }
 
+var stop_moveIzq = 5;
+var stop_moveAux = 5;
+var stop_moveDer = 5;
 function xInputPlayer(IP) 
 {
 	if(jugador[IP].inputXpad.START[1] || keys[jugador[IP].inputKpad.START[1]])
@@ -175,13 +178,42 @@ function xInputPlayer(IP)
 */
 		//Deshabilitar input del control para evitar que se quede presionado
 		jugador[IP].inputXpad.A[1] = false;
-		//Mover hacia adelante
-		jugador[IP].forward = -jugador[IP].forwardLimit;
-		
-		//Incrementar velocidad al presionar sin exceder el limite
-		if(jugador[IP].forwardLimit < jugador[IP].velMax)
-			jugador[IP].forwardLimit+=jugador[IP].velInc;
+		if(carrera_iniciada)
+		{
+			//Mover hacia adelante
+			jugador[IP].forward = -jugador[IP].forwardLimit;
+			
+			//Incrementar velocidad al presionar sin exceder el limite
+			if(jugador[IP].forwardLimit < jugador[IP].velMax)
+				jugador[IP].forwardLimit+=jugador[IP].velInc;
 
+		}
+		else
+		{
+			/*jugador[IP].yaw = jugador[IP].yawLimit;*/
+			if(stop_moveIzq > 0)
+			{ 
+				
+				if(typeof jugador[IP].camPlayer.children[0] != undefined)
+					jugador[IP].camPlayer.children[0].rotation.y -= THREE.Math.degToRad(jugador[IP].sensRot);
+				stop_moveIzq-=1;
+			}
+			else
+			{
+				if(stop_moveDer > 0)
+				{
+					if(typeof jugador[IP].camPlayer.children[0] != undefined)
+						jugador[IP].camPlayer.children[0].rotation.y += THREE.Math.degToRad(jugador[IP].sensRot);
+					stop_moveDer-=1;
+				}
+				else
+				{
+					stop_moveIzq = stop_moveAux;
+					stop_moveDer = stop_moveAux;
+				}
+				
+			}
+		}
 			/*
 		jugador[IP].camPlayer.children[0].children[26].rotation.y += THREE.Math.degToRad(jugador[IP].sensRot);
 		jugador[IP].camPlayer.children[0].children[27].rotation.y += THREE.Math.degToRad(jugador[IP].sensRot);

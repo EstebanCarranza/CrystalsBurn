@@ -40,7 +40,21 @@
 		var montanias = [];
 		var sky = [];
 		var final = -19350;
-		
+		var obj;
+		var obj2;
+		var llanta = [];
+		var camPosition = "";
+		var carPosition = "";
+		var total = 0;
+		var complete = false;
+		var place = "";
+		var maxPlayer;
+		var seconds = 3;
+		var retrasoSec = 0;
+		var retrasoSecAux = 10;
+		var carrera_iniciada = false;
+		var level_leaderboard;
+		var pausa;
 
 		/*
 			new Jugador
@@ -93,10 +107,7 @@
 			["player4"]
 			);
 
-		var obj;
-		var obj2;
-
-		var llanta = [];
+		
 		function init() {
 			
 			
@@ -122,6 +133,7 @@
 		$(document).ready(function () {
 			
 			$("#menu-pausa").hide();
+			$("#estatus-player").hide();
 			$("#empezarJuego").attr("disabled", true);
 
 			$("#empezarJuego").click(function () {
@@ -190,8 +202,7 @@
 			keys[String.fromCharCode(event.keyCode)] = false;
 		}
 
-		var camPosition = "";
-		var carPosition = "";
+		
 
 
 		function ValidateAllLoadedModels(isWorldReadyLocal) {
@@ -207,10 +218,91 @@
 			return complete;
 		}
 
-		var total = 0;
-		var complete = false;
-		var place = "";
-		var maxPlayer;
+		
+		function contador_inicial()
+		{
+			if(seconds >= 0)
+				{
+					if(retrasoSec < 0)
+					{
+						if(seconds == 0)
+						{
+							$(".estatus-player").text("¡Start!");
+							carrera_iniciada = true;
+						}
+						else
+							$(".estatus-player").text(seconds);
+
+						$(".estatus-player").show();
+						
+						retrasoSec = retrasoSecAux;
+						seconds -= 1;
+					}
+					else
+						retrasoSec -= 1;
+					
+					if(retrasoSec == 0)
+						$(".estatus-player").hide(100);
+				}
+				else
+					$(".estatus-player").hide(100);
+		}
+
+
+function ordenar()
+{
+	var item = 
+	[
+		{id :jugador[0].id, progreso: jugador[0].progreso},
+		{id :jugador[1].id, progreso: jugador[1].progreso},
+		{id :jugador[2].id, progreso: jugador[2].progreso},
+		{id :jugador[3].id, progreso: jugador[3].progreso}
+	];
+	var aux = 
+	[
+		{id:0, progreso:0}
+	];
+	for(var i = 0; i < 4; i++)
+	for(var j = 0; j< 3; j++)
+	{
+		/*debugger;*/
+		//comparamos
+		if(item[j].progreso < item[j+1].progreso){
+				//guardamos el numero mayor en el auxiliar
+				aux[0].progreso = item[j].progreso;
+				aux[0].id = item[j].id;
+
+				//guardamos el numero menor en el lugar correspondiente
+				item[j].progreso = item[j+1].progreso;
+				item[j].id = item[j+1].id;
+
+				//asignamos el auxiliar en el lugar correspondiente
+				item[j+1].progreso = aux[0].progreso;
+				item[j+1].id = aux[0].id;
+ 
+		}
+	 }
+ 
+	 for(var i = 0; i< 4; i++)
+		jugador[item[i].id].place = i+1;
+	
+
+	for(var i = 0; i < 4; i++)
+	{
+		$(".name-player-0"+i).text(jugador[item[i].id].name);
+		switch(jugador[item[i].id].place)
+		{
+			case 0: place = "N/A"; break;
+			case 1: place = "1st"; break;
+			case 2: place = "2nd"; break;
+			case 3: place = "3rd"; break;
+			default: place = (jugador[i].place + "th"); break;
+		}
+		$(".place-0"+i).text(place);
+	}
+	
+	return item;
+}
 		function render() {
 
 			total = requestAnimationFrame(render);
@@ -233,13 +325,15 @@
 
 
 			deltaTime = clock.getDelta();
-
+			
 
 
 			if (ValidateAllLoadedModels(isWorldReady) && complete) {
 
 			
 				keysPlayers();
+				
+				contador_inicial();
 
 
 				for (var i = 0; i < players; i++) {
@@ -250,7 +344,7 @@
 					else
 						$("#velocimetro-0"+i).text(jugador[i].forwardLimit + " Km/h");
 					
-					$("#P" + i + "-vwp").text(jugador[i].name);
+					$("#name-player-0"+i).text(jugador[i].name);
 
 					if(jugador[i].progreso <= 100)
 						jugador[i].progreso = ((jugador[i].camPlayer.position.z/final)*100).toFixed(2);
@@ -258,7 +352,13 @@
 					$("#progreso-0"+i).text(jugador[i].progreso + "%");
 					$("#total-cristales-0"+i).text(jugador[i].totalCristales);
 					
-					maxPlayer = Math.max(jugador[0].progreso, jugador[1].progreso, jugador[2].progreso, jugador[3].progreso);
+					//maxPlayer = Math.max(jugador[0].progreso, jugador[1].progreso, jugador[2].progreso, jugador[3].progreso);
+
+					//maxPlayer = Math.max.apply(null, [jugador[0].progreso,jugador[1].progreso,jugador[2].progreso,jugador[3].progreso]);
+					//debugger;
+					level_leaderboard = ordenar();
+/*
+					maxPlayer = -1;
 					switch(maxPlayer)
 					{
 						case jugador[0].progreso:
@@ -274,16 +374,9 @@
 							jugador[3].place = 1; jugador[0].place = 2; jugador[1].place = 2; jugador[2].place = 2;
 						break;
 					}
-
-					switch(jugador[i].place)
-					{
-						case 0: place = "N/A"; break;
-						case 1: place = "1st"; break;
-						case 2: place = "2nd"; break;
-						case 3: place = "3rd"; break;
-						default: place = (jugador[i].place + "th"); break;
-					}
-					$("#place-0"+i).text(place + " maxPlayer "+ maxPlayer);
+*/
+					
+					
 					
 					
 					/*
@@ -452,7 +545,8 @@
 </head>
 
 <body>
-		<div id="menu" class="menu menu-pausa">
+		
+		<div id="menu" class="menu">
                 <div id="mnuPrincipal" class="section">
                         <img class="banner" src="src/banner_02.png">
 						<div class="leaderboard">	
@@ -481,55 +575,130 @@
 	<span class='GUI cvP3' id="scene-section-04"></span>
 	<div id="canvas-GUI" class="canvas-GUI">
 		<div id="cvP0">
-			<div id="messages" class="estatus-player"></div>
-			<label class="estatus-player">Apagar estadisticas<input id="LOGS" type="checkbox"/></label>
-			<button class="estatus-player" id="velMaxBtn">Aplicar</button>
-			<input id="velMax" type="text" placeholder="velocidad" class="estatus-player"/>
+			<div id="messages" style="display:none"></div>
+			<label style="display:none";>Apagar estadisticas<input id="LOGS" type="checkbox"/></label>
+			<button style="display:none" id="velMaxBtn">Aplicar</button>
+			<input id="velMax" type="text" placeholder="velocidad" style="display:none"/>
 
+			<span class="places">
+				<label class="lugar quad-place q-place-00">
+					<label class="lugar place-00">1st</label>
+					<label class="quad-shadow name-player name-player-00">Player1</label>			
+				</label>
+				<label class="lugar quad-place q-place-01">
+					<label class="lugar place-01">1st</label>
+					<label class="quad-shadow name-player name-player-01">Player1</label>			
+				</label>
+				<label class="lugar quad-place q-place-02">
+					<label class="lugar place-02">1st</label>
+					<label class="quad-shadow name-player name-player-02">Player1</label>			
+				</label>
+				<label class="lugar quad-place q-place-03">
+					<label class="lugar place-03">1st</label>
+					<label class="quad-shadow name-player name-player-03">Player1</label>			
+				</label>
+			</span>
+			<label id="progreso-00" class="quad-shadow barra-progreso progreso-00"></label>
+			<label id="name-player-00" class="quad-shadow name-player"></label>
 			
-			<label class="lugar" id="place-00"></label>
-			<label id="progreso-00" class="quad-shadow barra-progreso"></label>
-			<label id="P0-vwp" class="quad-shadow name-player"></label>
 			<label id="velocimetro-00" class="velocimetro quad-shadow"></label>
 			<span class="contador-cristales quad-shadow">
 				<img src="src/crystal.png"/>
 				<label> x </label>
 				<label id="total-cristales-00"></label>
 			</span>
+			<label class="estatus-player">¡Ganaste!</label>
 		</div>
 
 		<div id="cvP1">
-			<label class="lugar" id="place-01"></label>
-			<label id="progreso-01" class="quad-shadow barra-progreso"></label>
-			<label id="P1-vwp" class="quad-shadow name-player"></label>
+				<span class="places">
+						<label class="lugar quad-place q-place-00">
+							<label class="lugar place-00">1st</label>
+							<label class="quad-shadow name-player name-player-00">Player1</label>			
+						</label>
+						<label class="lugar quad-place q-place-01">
+							<label class="lugar place-01">1st</label>
+							<label class="quad-shadow name-player name-player-01">Player1</label>			
+						</label>
+						<label class="lugar quad-place q-place-02">
+							<label class="lugar place-02">1st</label>
+							<label class="quad-shadow name-player name-player-02">Player1</label>			
+						</label>
+						<label class="lugar quad-place q-place-03">
+							<label class="lugar place-03">1st</label>
+							<label class="quad-shadow name-player name-player-03">Player1</label>			
+						</label>
+					</span>
+<!--			<label id="place-01" class="lugar place-01"></label>-->
+			<label id="progreso-01" class="quad-shadow barra-progreso progreso-01"></label>
+			<label id="name-player-01" class="quad-shadow name-player"></label>
 			<label id="velocimetro-01" class="velocimetro quad-shadow"></label>
 			<span class="contador-cristales quad-shadow">
 				<img src="src/crystal.png"/>
 				<label> x </label>
 				<label id="total-cristales-01"></label>
 			</span>
+			<label class="estatus-player">¡Ganaste!</label>
 		</div>
 		<div id="cvP2">
-			<label class="lugar" id="place-02"></label>
-			<label id="progreso-02" class="quad-shadow barra-progreso"></label>
-			<label id="P2-vwp" class="quad-shadow name-player"></label>
+				<span class="places">
+						<label class="lugar quad-place q-place-00">
+							<label class="lugar place-00">1st</label>
+							<label class="quad-shadow name-player name-player-00">Player1</label>			
+						</label>
+						<label class="lugar quad-place q-place-01">
+							<label class="lugar place-01">1st</label>
+							<label class="quad-shadow name-player name-player-01">Player1</label>			
+						</label>
+						<label class="lugar quad-place q-place-02">
+							<label class="lugar place-02">1st</label>
+							<label class="quad-shadow name-player name-player-02">Player1</label>			
+						</label>
+						<label class="lugar quad-place q-place-03">
+							<label class="lugar place-03">1st</label>
+							<label class="quad-shadow name-player name-player-03">Player1</label>			
+						</label>
+					</span>
+			<!--<label id="place-02" class="lugar place-02"></label>-->
+			<label id="progreso-02" class="quad-shadow barra-progreso progreso-02"></label>
+			<label id="name-player-02" class="quad-shadow name-player"></label>
 			<label id="velocimetro-02" class="velocimetro quad-shadow"></label>
 			<span class="contador-cristales quad-shadow">
 				<img src="src/crystal.png"/>
 				<label> x </label>
 				<label id="total-cristales-02"></label>
 			</span>
+			<label class="estatus-player">¡Ganaste!</label>
 		</div>
 		<div id="cvP3">
-			<label class="lugar" id="place-03"></label>
-			<label id="progreso-03" class="quad-shadow barra-progreso"></label>
-			<label id="P3-vwp" class="quad-shadow name-player"></label>
+				<span class="places">
+						<label class="lugar quad-place q-place-00">
+							<label class="lugar place-00">1st</label>
+							<label class="quad-shadow name-player name-player-00">Player1</label>			
+						</label>
+						<label class="lugar quad-place q-place-01">
+							<label class="lugar place-01">1st</label>
+							<label class="quad-shadow name-player name-player-01">Player1</label>			
+						</label>
+						<label class="lugar quad-place q-place-02">
+							<label class="lugar place-02">1st</label>
+							<label class="quad-shadow name-player name-player-02">Player1</label>			
+						</label>
+						<label class="lugar quad-place q-place-03">
+							<label class="lugar place-03">1st</label>
+							<label class="quad-shadow name-player name-player-03">Player1</label>			
+						</label>
+					</span>
+			<!--<label id="place-03" class="lugar place-03"></label>-->
+			<label id="progreso-03" class="quad-shadow barra-progreso progreso-03"></label>
+			<label id="name-player-03" class="quad-shadow name-player"></label>
 			<label id="velocimetro-03" class="velocimetro quad-shadow"></label>
 			<span class="contador-cristales quad-shadow">
 				<img src="src/crystal.png"/>
 				<label> x </label>
 				<label id="total-cristales-03"></label>
 			</span>
+			<label class="estatus-player">¡Ganaste!</label>
 		</div>
 	</div>
 </body>
