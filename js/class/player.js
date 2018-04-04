@@ -358,12 +358,7 @@ function xInputPlayer(IP)
 		jugador[IP].forwardLimit-=jugador[IP].velInc;
 		jugador[IP].forward = -jugador[IP].forwardLimit;
 	}
-	/*if(jugador[IP].forwardLimit < jugador[IP].velMin && (!keys[jugador[IP].inputKpad.X[1]] || jugador[IP].inputXpad.X[1]))
-	{
-		//jugador[IP].velInc *= -1;
-		//jugador[IP].forwardLimit+=jugador[IP].velInc;
-		jugador[IP].forward = jugador[IP].forwardLimit;
-	}*/
+	
 	
 }
 
@@ -382,76 +377,4 @@ function keysPlayers() {
 //			jugador[i].forwardLimit = jugador[i].forwardLimitAux;
 		}
 	}
-	
-	//player1
-/*	xInputPlayer(0);
-	xInputPlayer(1);
-	xInputPlayer(2);
-	xInputPlayer(3);*/
-/*
-	//<PLAYER 2>
-	if (keys["F"]) {
-		jugador[1].yaw = 1;
-	}
-	else if (keys["H"]) {
-		jugador[1].yaw = -1;
-	}
-	if (keys["T"]) {
-		console.debug("T");
-		jugador[1].forward = -20;
-	}
-	else if (keys["G"]) {
-		jugador[1].forward = 20;
-	}
-	if (keys["R"]) {
-		jugador[1].leftRight = -0.1;
-	}
-	else if (keys["Y"]) {
-		jugador[1].leftRight = 0.1;
-	}
-	//</PLAYER 2>
-
-	//<PLAYER 3>
-	if (keys["J"]) {
-		jugador[2].yaw = 1;
-	}
-	else if (keys["L"]) {
-		jugador[2].yaw = -1;
-	}
-	if (keys["I"]) {
-		jugador[2].forward = -20;
-	}
-	else if (keys["K"]) {
-		jugador[2].forward = 20;
-	}
-	if (keys["U"]) {
-		jugador[2].leftRight = -0.1;
-	}
-	else if (keys["O"]) {
-		jugador[2].leftRight = 0.1;
-	}
-	//</PLAYER 3>
-
-	//<PLAYER 4>
-	if (keys["1"]) {
-		jugador[3].yaw = 1;
-	}
-	else if (keys["2"]) {
-		jugador[3].yaw = -1;
-	}
-	if (keys["3"]) {
-		jugador[3].forward = -20;
-	}
-	else if (keys["4"]) {
-		jugador[3].forward = 20;
-	}
-	if (keys["5"]) {
-		jugador[3].leftRight = -0.1;
-	}
-	else if (keys["6"]) {
-		jugador[3].leftRight = 0.1;
-	}
-	//</PLAYER 4>
-
-	*/
 }
