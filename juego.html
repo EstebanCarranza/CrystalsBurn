@@ -1,7 +1,5 @@
 <html>
-
 <head>
-
 	<title>Crystals Burns</title>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -19,640 +17,108 @@
 	<link rel="stylesheet" type="text/css" href="css/menu-principal.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
 	<script type="text/javascript" src="js/menuPausa.js"></script>
-
-	<script type="text/javascript">
-
-		var scene;
-		var renderer;
-		//var viewports = [];
-		//var camPlayers = [];
-		var players = 4;
-		var clock;
-		var deltaTime;
-		var keys = {};
-		var isWorldReady = [];
-		var cajaX = [];
-		var pista = [];
-		var arbol = [];
-		var debug = true;
-		var objetosConColision = [];
-		var jugador = [];
-		var montanias = [];
-		var sky = [];
-		var final = -19350;
-		var obj;
-		var obj2;
-		var llanta = [];
-		var camPosition = "";
-		var carPosition = "";
-		var total = 0;
-		var complete = false;
-		var place = "";
-		var maxPlayer;
-		var seconds = 3;
-		var retrasoSec = 0;
-		var retrasoSecAux = 10;
-		var carrera_iniciada = false;
-		var level_leaderboard;
-		var pausa;
-
-		/*
-			new Jugador
-			(
-				id, forwardLimit, yawLimit, leftRightLimit, topBottomLimit, velMax, velMin, 
-				spectatorPos, [Vector3]
-				spectatorScl, [Vector3]
-				spectatorRot  [Vector3]
-			);
-		*/
-		/*var velMin = 10;
-		var velMax = 500;
-		var velInc = 1;*/
-		//var movement = [forwardLimit, yawLimit, leftRightLimit, topBottomLimit, sensRot]
-		var movement = [-5, 1, 0.001, 1, 5];
-		//var velocity = [velMin, velInc, velMax, velFreno];
-		var velocity = [0, 1, 500, 10];
-		//var translate = new THREE.Vector3(1, -3.5, 0.5); // dentro del coche
-		var translate = new THREE.Vector3(0, -6, -15); // fuera del coche
-		//var scale = new THREE.Vector3(0.002, 0.002, 0.002);
-		var scale = new THREE.Vector3( 1, 1, 1);
-		var rotation = new THREE.Vector3(0, THREE.Math.degToRad(90), 0);
-		
-
-		jugador[0] = new Jugador(0, movement, velocity,
-			translate,
-			scale,
-			rotation,
-			["player1"]
-			);
-
-		jugador[1] = new Jugador(1, movement, velocity,
-			translate,
-			scale,
-			rotation,
-			["player2"]
-			);
-
-		jugador[2] = new Jugador(2, movement, velocity,
-			translate,
-			scale,
-			rotation,
-			["player3"]
-			);
-
-		jugador[3] = new Jugador(3, movement, velocity,
-			translate,
-			scale,
-			rotation,
-			["player4"]
-			);
-
-		
-		function init() {
-			
-			
-			//carpeta, OBJ, MTL, player
-			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[0]);
-			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[1]);
-			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[2]);
-			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[3]);
-			
-			
-			crear_cielo();
-			//debugger;
-			/*
-			obj2 = obj.clone();
-			obj2.position.y += 2;
-			scene.add(obj2);*/
-
-			//jugador[1].modelo = bmw;
-			//scene.add(jugador[1].modelo);
-			//jugador[1].camPlayer.add(jugador[1].modelo);
-
-		}
-		$(document).ready(function () {
-			
-			$("#menu-pausa").hide();
-			$("#estatus-player").hide();
-			$("#empezarJuego").attr("disabled", true);
-
-			$("#empezarJuego").click(function () {
-				$("#menu").remove();
-				
-			});
-			$("#velMaxBtn").click(function(){
-				var jfl = $("#velMax").val();
-				jfl = parseFloat(jfl);
-				//debugger;
-				if(!isNaN(jfl))
-				{
-					jugador[0].forwardLimit = jfl;
-				}
-				
-				if ($('#LOGS').prop('checked')) {
-				$("#canvas-GUI").hide();
-			}else $("#canvas-GUI").show();
-			});
-			$("#btnContinuar").click(function(){
-
-				$("#menu-pausa").hide();
-			});
-		
-			menuPausa();
-
-			enableGamepads();
-
-			//setupScene(1, "scene-section");
-				setupSceneForViewport(0, "scene-section-01", 30, 8, -1.5);
-
-			if (players >= 2)
-				setupSceneForViewport(1, "scene-section-02", 10, 8, -1.5);
-			if (players >= 3)
-				setupSceneForViewport(2, "scene-section-03", -10, 8, -1.5);
-
-			//jugadorX = new Jugador(3, -10, 5, -10);
-
-			if (players >= 4)
-				setupSceneForViewport(3, "scene-section-04", -30, 8, -1.5);
-
-			//cargar_cajas();
-			//cargar_carro(0, jugador[0]);
-			init();
-			crear_pista();
-			crear_arboles();
-			crear_montanias();
-			//crear_llantas();
-
-			document.addEventListener('keydown', onKeyDown);
-			document.addEventListener('keyup', onKeyUp);
-
-			//alert("OK");
-			render();
-
-			
-		});
-
-
-
-		function onKeyDown(event) {
-			//console.log(String.fromCharCode(event.keyCode));
-			keys[String.fromCharCode(event.keyCode)] = true;
-
-		}
-		function onKeyUp(event) {
-			keys[String.fromCharCode(event.keyCode)] = false;
-		}
-
-		
-
-
-		function ValidateAllLoadedModels(isWorldReadyLocal) {
-			$("#messages").html(isWorldReady.length);
-			var complete = true;
-			for (var i = 0; i < isWorldReadyLocal.length; i++)
-				complete = complete * isWorldReadyLocal[i];
-				
-			
-			if (!complete)
-				alert("Cuidado, hay modelos que no cargaron!");
-
-			return complete;
-		}
-
-		
-		function contador_inicial()
-		{
-			if(seconds >= 0)
-				{
-					if(retrasoSec < 0)
-					{
-						if(seconds == 0)
-						{
-							$(".estatus-player").text("¡Start!");
-							carrera_iniciada = true;
-						}
-						else
-							$(".estatus-player").text(seconds);
-
-						$(".estatus-player").show();
-						
-						retrasoSec = retrasoSecAux;
-						seconds -= 1;
-					}
-					else
-						retrasoSec -= 1;
-					
-					if(retrasoSec == 0)
-						$(".estatus-player").hide(100);
-				}
-				else
-					$(".estatus-player").hide(100);
-		}
-
-
-function ordenar()
-{
-	var item = 
-	[
-		{id :jugador[0].id, progreso: jugador[0].progreso},
-		{id :jugador[1].id, progreso: jugador[1].progreso},
-		{id :jugador[2].id, progreso: jugador[2].progreso},
-		{id :jugador[3].id, progreso: jugador[3].progreso}
-	];
-	var aux = 
-	[
-		{id:0, progreso:0}
-	];
-	for(var i = 0; i < 4; i++)
-	for(var j = 0; j< 3; j++)
-	{
-		/*debugger;*/
-		//comparamos
-		if(item[j].progreso < item[j+1].progreso){
-				//guardamos el numero mayor en el auxiliar
-				aux[0].progreso = item[j].progreso;
-				aux[0].id = item[j].id;
-
-				//guardamos el numero menor en el lugar correspondiente
-				item[j].progreso = item[j+1].progreso;
-				item[j].id = item[j+1].id;
-
-				//asignamos el auxiliar en el lugar correspondiente
-				item[j+1].progreso = aux[0].progreso;
-				item[j+1].id = aux[0].id;
- 
-		}
-	 }
- 
-	 for(var i = 0; i< 4; i++)
-		jugador[item[i].id].place = i+1;
-	
-
-	for(var i = 0; i < 4; i++)
-	{
-		$(".name-player-0"+i).text(jugador[item[i].id].name);
-		switch(jugador[item[i].id].place)
-		{
-			case 0: place = "N/A"; break;
-			case 1: place = "1st"; break;
-			case 2: place = "2nd"; break;
-			case 3: place = "3rd"; break;
-			default: place = (jugador[i].place + "th"); break;
-		}
-		$(".place-0"+i).text(place);
-	}
-	
-	return item;
-}
-		function render() {
-
-			total = requestAnimationFrame(render);
-			if (total <= 200) {
-
-				$("#cargando").text("Cargando..." + (total / 2) + "%");
-				$("#pgb-render").val(total);
-				
-
-			} else {
-				
-				$("#cargando").text("Carga completada!");
-				$("#empezarJuego").attr("disabled", false);
-				$("#menu").remove();
-				complete = true;
-			}
-			//debugger;
-			//alert(inputXpad[0].A[2]);
-			//			$("#test-retroceso").text(jugador[0].inputXpad.A[2] + "  " + (jugador[0].inputXpad.sensibilidad * -1));
-
-
-			deltaTime = clock.getDelta();
-			
-
-
-			if (ValidateAllLoadedModels(isWorldReady) && complete) {
-
-			
-				keysPlayers();
-				
-				contador_inicial();
-
-
-				for (var i = 0; i < players; i++) {
-					
-					if(jugador[i].forwardLimit < 0)
-					
-						$("#velocimetro-0"+i).text("Reverse");
-					else
-						$("#velocimetro-0"+i).text(jugador[i].forwardLimit + " Km/h");
-					
-					$("#name-player-0"+i).text(jugador[i].name);
-
-					if(jugador[i].progreso <= 100)
-						jugador[i].progreso = ((jugador[i].camPlayer.position.z/final)*100).toFixed(2);
-					
-					$("#progreso-0"+i).text(jugador[i].progreso + "%");
-					$("#total-cristales-0"+i).text(jugador[i].totalCristales);
-					
-					//maxPlayer = Math.max(jugador[0].progreso, jugador[1].progreso, jugador[2].progreso, jugador[3].progreso);
-
-					//maxPlayer = Math.max.apply(null, [jugador[0].progreso,jugador[1].progreso,jugador[2].progreso,jugador[3].progreso]);
-					//debugger;
-					level_leaderboard = ordenar();
-/*
-					maxPlayer = -1;
-					switch(maxPlayer)
-					{
-						case jugador[0].progreso:
-							jugador[0].place = 1; jugador[1].place = 2; jugador[2].place = 2; jugador[3].place = 2;
-						break;
-						case jugador[1].progreso:
-							jugador[1].place = 1; jugador[0].place = 2; jugador[2].place = 2; jugador[3].place = 2;
-						break;
-						case jugador[2].progreso:
-							jugador[2].place = 1; jugador[0].place = 2; jugador[1].place = 2; jugador[3].place = 2;
-						break;
-						case jugador[3].progreso:
-							jugador[3].place = 1; jugador[0].place = 2; jugador[1].place = 2; jugador[2].place = 2;
-						break;
-					}
-*/
-					
-					
-					
-					
-					/*
-					$("#P" + i + "-rot").html(
-						"Rotacion del auto: [" +
-						jugador[i].camPlayer.children[0].rotation.x + " , " +
-						jugador[i].camPlayer.children[0].rotation.y + " , " +
-						jugador[i].camPlayer.children[0].rotation.z + "] <br>" +
-						"MaxRot[0](IZQ) [" +
-						jugador[i].camPlayer.children[0].maxRot[0].x + " , " +
-						jugador[i].camPlayer.children[0].maxRot[0].y + " , " +
-						jugador[i].camPlayer.children[0].maxRot[0].z + "] <br>" +
-						"MaxRot[1](DER) [" +
-						jugador[i].camPlayer.children[0].maxRot[1].x + " , " +
-						jugador[i].camPlayer.children[0].maxRot[1].y + " , " +
-						jugador[i].camPlayer.children[0].maxRot[1].z + "] <br>" +
-						"");
-							*/
-						
-					
-				}
-
-				/*
-								$("#P0-rot").html
-								(
-									"Rotacion izq [" + jugador[0].camPlayer.children[0].rotation.y + "] <br>" +
-									"Rotacion maxRot[0] [" + jugador[0].camPlayer.children[0].maxRot[0].y + "] <br>" +
-									"Rotacion maxRot[1] [" + jugador[0].camPlayer.children[0].maxRot[1].y + "]"
-								);*/
-				//jugador[0].modelo.rotation += THREE.Math.degToRad(10);
-
-				for (var j = 0; j < players; j++)
-					for (var i = 0; i < jugador[j].rayos.length; i++) {
-						//Param1: desde donde lanzamos el rayo (vector)
-						//Param2: hacia donde (direccion del vector)
-
-						jugador[j].raycaster.set(jugador[j].camPlayer.position, jugador[j].rayos[i]);
-
-						//Verificamos si existe la colisión
-						//Param1: Objeto(s) "colisionables"
-						//Param2: Si queremos validar la colisión con los hijos 
-						/*
-							para objetos
-								var colisiones = raycaster.intersectObject(objeto);
-							para arreglos
-								var colisiones = raycaster.intersectObjects(objetosConColision, false);
-		
-							para colision con hijos
-							var colisiones = raycaster.intersectObjects(objetosConColision, true);
-		
-						*/
-						var colisiones = jugador[j].raycaster.intersectObjects(objetosConColision, true);
-
-						//si el arreglo es mayor a cero entonces si hay colision
-						if (colisiones.length > 0 && colisiones[0].distance < 1) {
-							jugador[j].colision = true;
-							console.log("player" + j + " colisionando " + jugador[j].colision);
-
-							//jugador[j].camPlayer.translateZ(-jugador[j].forwardLimit * deltaTime);
-							//jugador[j].forward = jugador[j].forwardLimit;
-							
-
-						}
-						else
-						{
-							jugador[j].colision = false;
-							//console.log("player" + j + " colisionando " + jugador[j].colision);
-						}
-					}
-				for (var i = 0; i < players; i++) {
-					jugador[i].camPlayer.rotation.y += jugador[i].yaw * deltaTime;
-					jugador[i].camPlayer.translateZ(jugador[i].forward * deltaTime);
-					jugador[i].camPlayer.translateX(jugador[i].leftRight);
-					jugador[i].camPlayer.translateY(jugador[i].topBottom);
-
-				}
-
-				
-			}
-
-			//debugger;
-			for (var i = 0; i < players; i++)
-				jugador[i].viewport.render(scene, jugador[i].camPlayer);
-
-			/*if(jugador[3].viewport.render!=null)
-				$("#test-00").text("OK");*/
-			//debugger;
-
-			//debugger;
-			//$("#test-00").text(render.arguments[0]);
-
-		}
-
-		var borde = [-5, -5];
-		
-		function setupSceneForViewport(screenID, objectID, posX, posY, posZ) {
-
-			switch (players) {
-				case 1:
-					var visibleSize = { width: window.innerWidth, height: window.innerHeight };
-					break;
-				case 2:
-					var visibleSize = { width: ((window.innerWidth / 2) + borde[0]), height: window.innerHeight };
-					break;
-				case 3:
-					var visibleSize = { width: ((window.innerWidth / 2) + borde[0]), height: (window.innerHeight / 2) + borde[1] };
-					break;
-				case 4:
-					var visibleSize = { width: ((window.innerWidth / 2) + borde[0]), height: (window.innerHeight / 2) + borde[1] };
-					break;
-				default:
-					var visibleSize = { width: window.innerWidth, height: window.innerHeight };
-					break;
-			}
-
-
-			$("#cvP" + screenID).width(visibleSize.width);
-			$("#cvP" + screenID).height(visibleSize.height);
-
-
-			//var visibleSize = { width: 100, height: 100};
-
-			clock = new THREE.Clock();
-			scene = new THREE.Scene();
-			//camPlayers[0] = new THREE.PerspectivecamPlayers[0](75, visibleSize.width / visibleSize.height, 0.1, 100);
-			jugador[screenID].camPlayer = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 20500);
-			jugador[screenID].camPlayer.position.x = posX;
-			jugador[screenID].camPlayer.position.y = posY;
-			jugador[screenID].camPlayer.position.z = posZ;
-			jugador[screenID].camPlayer.name = "player" + screenID;
-
-			jugador[screenID].viewport = new THREE.WebGLRenderer({ precision: "mediump" });
-			//renderer.setClearColor(new THREE.Color(0, 0, 0));
-			jugador[screenID].viewport.setClearColor(new THREE.Color(0.1, 0.5, 0.6));
-			jugador[screenID].viewport.setPixelRatio(visibleSize.width / visibleSize.height);
-			jugador[screenID].viewport.setSize(visibleSize.width, visibleSize.height);
-
-			var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 1.0);
-			scene.add(ambientLight);
-
-			var directionalLight = new THREE.DirectionalLight(new THREE.Color(1, 1, 1), 1.0);
-			directionalLight.position.set(0, 0, 1);
-			scene.add(directionalLight);
-
-			var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
-			grid.position.y = -1;
-			scene.add(grid);
-
-
-			//scene.add(jugador[0].modelo);
-			//jugador[0].modelo.add(jugador[0].camPlayer);
-			
-			/*var pl = jugador[0].modelo;
-			pl.add(jugador[0].camPlayer);*/
-
-			for (var i = 0; i < players; i++)
-				scene.add(jugador[i].camPlayer);
-
-
-			$("#" + objectID).append(jugador[screenID].viewport.domElement);
-		}
-
-
-
-	</script>
+	<script type="text/javascript" src="js/models/globalVar.js"></script>
+	<script type="text/javascript" src="js/functions/graph.js"></script>
+	<script type="text/javascript" src="js/functions/render.js"></script>
 </head>
 
 <body>
 		
-		<div id="menu" class="menu">
-                <div id="mnuPrincipal" class="section">
-                        <img class="banner" src="src/banner_02.png">
-						<div class="leaderboard">	
-							<label id="cargando" style="color:black;">Cargando...</label>
-                            <progress id="pgb-render" value="0" max="200"></progress>
-                            <button style="display:none;" id="empezarJuego" class="btn" type="button">Empezar el juego</button>
-						</div>
-                </div>
-              
-		</div>
-		<!--
-		<div id="menu-pausa" class="menu menu-pausa">
-			<div id="mnuPausa" class="section">
-					<img class="banner" src="src/banner_02.png">
-					<div class="leaderboard">	
-						<label id="pausado" style="color:black;">Juego pausado</label>
-						<button id="btnContinuar" class="btn" type="button">Continuar</button>
-						
-					</div>
+	<div id="menu" class="menu">
+		<div id="mnuPrincipal" class="section">
+			<img class="banner" src="src/banner_02.png">
+			<div class="leaderboard">	
+				<br>
+				<label id="pauseTitle" style="color:black;">Recuerda que puedes presionar pausa presionando la letra P</label>
+				<br><br>
+				<label id="cargando" style="color:black;">Cargando...</label>
+				<progress id="pgb-render" value="0" max="200"></progress>
+				<button style="display:none;" id="empezarJuego" class="btn" type="button">Empezar el juego</button>
 			</div>
-		  
-	</div>-->
+		</div>	
+	</div>
 	<div id="menu-pausa" class="menu menu-pausa">
-			<div id="mnuPausa" class="section">
-					<img class="banner" src="src/banner_02.png">
-					<div class="leaderboard">	
-						<label id="pausado" class="pause-title">Juego pausado</label>
-						<button id="btnContinuar" class="btn" type="button">Continuar</button>
-						<button id="btnOpciones" class="btn" type="button">Opciones</button>
-						<button id="btnSalir" class="btn" type="button">Salir</button>
-					</div>
-			</div>
-			<div id="mnuPausaOpc" class="section">
-					<img class="banner" src="src/banner_02.png">
-					<div class="leaderboard">	
-						<label id="pausadoOpc" class="pause-title">Opciones</label>
-						<button id="btnControles" class="btn" type="button">Controles</button>
-						<button id="btnInstrucciones" class="btn" type="button">Instrucciones</button>
-						<button id="btnRegresarMenu" class="btn" type="button">Regresar</button>
-					</div>
-			</div>
-			<div id="mnuPausaControles" class="section">
-					<img class="banner" src="src/banner_02.png">
-					<div class="leaderboard">	
-						<label id="pausadoControles" class="pause-title">Controles</label>
-						
-						<label class="pause-controles">
-								<button id="btnCtrlTeclado" class="btn btn-ctrl" type="button">Teclado</button>
-								<button id="btnCtrlControl" class="btn btn-ctrl" type="button">Control</button>
-						<section id="ctrl-keyboard">
+		<div id="mnuPausa" class="section">
+				<img class="banner" src="src/banner_02.png">
+				<div class="leaderboard">	
+					<label id="pausado" class="pause-title">Juego pausado</label>
+					<button id="btnContinuar" class="btn" type="button">Continuar</button>
+					<button id="btnOpciones" class="btn" type="button">Opciones</button>
+					<button id="btnSalir" class="btn" type="button">Salir</button>
+				</div>
+		</div>
+		<div id="mnuPausaOpc" class="section">
+				<img class="banner" src="src/banner_02.png">
+				<div class="leaderboard">	
+					<label id="pausadoOpc" class="pause-title">Opciones</label>
+					<button id="btnControles" class="btn" type="button">Controles</button>
+					<button id="btnInstrucciones" class="btn" type="button">Instrucciones</button>
+					<button id="btnRegresarMenu" class="btn" type="button">Regresar</button>
+				</div>
+		</div>
+		<div id="mnuPausaControles" class="section">
+			<img class="banner" src="src/banner_02.png">
+			<div class="leaderboard">	
+				<label id="pausadoControles" class="pause-title">Controles</label>
+				<label class="pause-controles">
+					<button id="btnCtrlTeclado" class="btn btn-ctrl" type="button">Teclado</button>
+					<button id="btnCtrlControl" class="btn btn-ctrl" type="button">Control</button>
+					<section id="ctrl-keyboard">
 						<label class="pause-controles" id="ctrl-keyboard">
-								Player 1 <br>
-								W: Avanzar<br>
-								S: Retroceder<br>
-								A: Moverse a la izquierda<br>
-								D: Moverse a la derecha<br>
+							Player 1 <br>
+							W: Avanzar<br>
+							S: Retroceder<br>
+							A: Moverse a la izquierda<br>
+							D: Moverse a la derecha<br>
 						</label>
 						<label class="pause-controles">
-								Player 2 <br>
-								UP: Avanzar<br>
-								DOWN: Retroceder<br>
-								LEFT: Moverse a la izquierda<br>
-								RIGHT: Moverse a la derecha<br>
+							Player 2 <br>
+							UP: Avanzar<br>
+							DOWN: Retroceder<br>
+							LEFT: Moverse a la izquierda<br>
+							RIGHT: Moverse a la derecha<br>
 						</label>
 						<label class="pause-controles">
-								Player 3 <br>
-								NUMPAD_8: Avanzar<br>
-								NUMPAD_2: Retroceder<br>
-								NUMPAD_4: Moverse a la izquierda<br>
-								NUMPAD_6: Moverse a la derecha<br>
+							Player 3 <br>
+							NUMPAD_8: Avanzar<br>
+							NUMPAD_2: Retroceder<br>
+							NUMPAD_4: Moverse a la izquierda<br>
+							NUMPAD_6: Moverse a la derecha<br>
 						</label>
 						<label class="pause-controles">
-								Player 4 <br>
-								U: Avanzar<br>
-								J: Retroceder<br>
-								H: Moverse a la izquierda<br>
-								L: Moverse a la derecha<br>
+							Player 4 <br>
+							U: Avanzar<br>
+							J: Retroceder<br>
+							H: Moverse a la izquierda<br>
+							L: Moverse a la derecha<br>
 						</label>
-						</section>
-						<section id="ctrl-control">
-							<label class="pause-controles">
-									Control Xbox One and 360 <br>
-									Player 1, 2, 3, 4 <br>
-									A: Avanzar<br>
-									X: Retroceder<br>
-									Joystick: direccion<br>
-							</label>
-						</section>
-					</label>
-						<button class="btnRegresarOpc btn" type="button">Regresar</button>
-					</div>
+					</section>
+					<section id="ctrl-control">
+						<label class="pause-controles">
+							Control Xbox One and 360 <br>
+							Player 1, 2, 3, 4 <br>
+							A: Avanzar<br>
+							X: Retroceder<br>
+							Joystick: direccion<br>
+						</label>
+					</section>
+				</label>
+				<button class="btnRegresarOpc btn" type="button">Regresar</button>
 			</div>
-			<div id="mnuPausaInstrucciones" class="section">
-					<img class="banner" src="src/banner_02.png">
-					<div class="leaderboard">	
-						<label id="pausadoInstrucciones" class="pause-title">Instrucciones</label>
-						<label class="pause-instrucciones">
-							<ul class="lista">
-								<li>Quedar en la mejor posición <br></li>
-								<li>Recolectar la mayor cantidad de cristales que se encuentran en el escenario</li>
-							</ul>
-						</label>
-						<button class="btnRegresarOpc btn" type="button">Regresar</button>
-					</div>
+		</div>
+		<div id="mnuPausaInstrucciones" class="section">
+			<img class="banner" src="src/banner_02.png">
+			<div class="leaderboard">	
+				<label id="pausadoInstrucciones" class="pause-title">Instrucciones</label>
+				<label class="pause-instrucciones">
+					<ul class="lista">
+						<li>Quedar en la mejor posición <br></li>
+						<li>Recolectar la mayor cantidad de cristales que se encuentran en el escenario</li>
+					</ul>
+				</label>
+				<button class="btnRegresarOpc btn" type="button">Regresar</button>
 			</div>
+		</div>
 	</div>
 
 	<span class='GUI cvP0' id="scene-section-01"></span>
