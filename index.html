@@ -24,6 +24,64 @@
                 {	
                         window.location = "juego.html";
                 });
+
+
+                function obtenerCarrera(id)
+                { 
+                        
+                        $.ajax
+                        ({
+                                data: {"idCarrera" :id},
+                                type: "GET",
+                                dataType: "json",
+                                url: "php/obtener-carreras.php",
+                                
+                        })
+                        
+                        .done(function( data, textStatus, jqXHR ) 
+                        {
+                                
+                                $("#nombreCarrera").text(data.nombreCarrera);
+                                $("#nomP1").text(data.nomP1);
+                                $("#criP1").text(data.criP1);
+                                $("#posP1").text(data.posP1);
+                                
+                                $("#nomP2").text(data.nomP2);
+                                $("#criP2").text(data.criP2);
+                                $("#posP2").text(data.posP2);
+                                
+                                $("#nomP3").text(data.nomP3);
+                                $("#criP3").text(data.criP3);
+                                $("#posP3").text(data.posP3);
+                                
+                                $("#nomP4").text(data.nomP4);
+                                $("#criP4").text(data.criP4);
+                                $("#posP4").text(data.posP4);
+                                
+                        })
+                        
+                        .fail(function( jqXHR, textStatus, errorThrown ) 
+                        {
+                                alert('fail');
+                        })
+                }
+                var idX = 0;
+                obtenerCarrera(idX);
+                
+                $("#carreraSig").click(function()
+                {
+                        if(idX > 0)
+                        idX -= 1; 
+                        
+                        obtenerCarrera(idX);
+                });
+
+                $("#carreraAnt").click(function()
+                {
+                        idX += 1;
+                
+                        obtenerCarrera(idX);
+                });
         });
      </script>
 </head>
@@ -35,9 +93,9 @@
                                 <br>
                                 <div class="ldb-title" style="font-size:25px;">Nombre de la ultima carrera</div>
                                 <div class="ldb-title">
-                                        <button class="btn angle"><i class="fas fa-angle-left"></i></button>
-                                        <div class="ldb-title-desc"> Puente </div>
-                                        <button class="btn angle"><i class="fas fa-angle-right"></i></button> 
+                                        <button id="carreraSig" class="btn angle"><i class="fas fa-angle-left"></i></button>
+                                        <div class="ldb-title-desc" id="nombreCarrera"> Puente </div>
+                                        <button id="carreraAnt" class="btn angle"><i class="fas fa-angle-right"></i></button> 
                                 </div>
                                 <table class="ldb-table">
                                         <thead>
@@ -48,10 +106,10 @@
                                                 </tr>
                                         </thead>
                                         <tbody>
-                                                <tr><td>10</td><td>Player1</td><td>1</td></tr>
-                                                <tr><td>10</td><td>Player2</td><td>3</td></tr>
-                                                <tr><td>10</td><td>Player3</td><td>2</td></tr>
-                                                <tr><td>10</td><td>Player4</td><td>4</td></tr>
+                                                <tr><td id="criP1">10</td><td id="nomP1">Player1</td><td id="posP1">1</td></tr>
+                                                <tr><td id="criP2">10</td><td id="nomP2">Player2</td><td id="posP2">3</td></tr>
+                                                <tr><td id="criP3">10</td><td id="nomP3">Player3</td><td id="posP3">2</td></tr>
+                                                <tr><td id="criP4">10</td><td id="nomP4">Player4</td><td id="posP4">4</td></tr>
                                         
                                         </tbody>
                                 </table>
@@ -77,13 +135,16 @@
                                         <br>
                                 <div class="ldb-title" style="font-size:25px; ">Escribe los nombres de los jugadores y la carrera</div>
                                 <br>
-                                <input class="input carrera" id="nombre-carrera" placeholder="Nombre de la carrera"/>
-                                <input class="input" id="nombre-p1" placeholder="Player 1"/>
-                                <input class="input" id="nombre-p2" placeholder="Player 2"/>
-                                <input class="input" id="nombre-p3" placeholder="Player 3"/>
-                                <input class="input" id="nombre-p4" placeholder="Player 4"/>
+                                <form method="post" action="php/registrar-carrera.php">
+                                <input class="input carrera" name='carrera' id="nombre-carrera" placeholder="Nombre de la carrera"  required title="Por favor escribe el nombre de la carrera :)"/>
+                                <input class="input" name='player[]' id="nombre-p1" placeholder="Player 1" required/>
+                                <input class="input" name='player[]' id="nombre-p2" placeholder="Player 2" required/>
+                                <input class="input" name='player[]' id="nombre-p3" placeholder="Player 3" required/>
+                                <input class="input" name='player[]' id="nombre-p4" placeholder="Player 4" required/>
                                 <button id="btnIrMnuPrincipal" class="btn" type="button">Regresar</button>
-                                <button id="empezarJuego" class="btn" type="button">Empezar el juego</button>
+                                <!--<button id="empezarJuego" class="btn" type="button">Empezar el juego</button>-->
+                                <input type="submit" class="btn" value="Empezar juego"/>
+                        </form>
                         </div>
                 </div>
         </div>

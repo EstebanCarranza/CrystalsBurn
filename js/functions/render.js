@@ -26,7 +26,7 @@ function render() {
             if(jugador[i].forwardLimit < 0)
                 $("#velocimetro-0"+i).text("Reverse");
             else
-                $("#velocimetro-0"+i).text(jugador[i].forwardLimit + " Km/h");
+                $("#velocimetro-0"+i).text((jugador[i].forwardLimit/2) + " Km/h");
             
             $("#name-player-0"+i).text(jugador[i].name);
 
@@ -147,11 +147,11 @@ function setupSceneForViewport(screenID, objectID, posX, posY, posZ) {
     jugador[screenID].viewport.setPixelRatio(visibleSize.width / visibleSize.height);
     jugador[screenID].viewport.setSize(visibleSize.width, visibleSize.height);
 
-    var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 1.0);
+    var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 0.5);
     scene.add(ambientLight);
 
-    var directionalLight = new THREE.DirectionalLight(new THREE.Color(1, 1, 1), 1.0);
-    directionalLight.position.set(0, 0, 1);
+    var directionalLight = new THREE.DirectionalLight(new THREE.Color(0.2, 0.5, 0.4), 1.0);
+    directionalLight.position.set(0, 1, 0);
     scene.add(directionalLight);
 
     var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
