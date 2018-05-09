@@ -23,10 +23,10 @@ class BaseDatos
 	public function abrir_conexion()
 	{
 		
-		$this->link = mysql_connect("localhost", "root", "root")
+		$this->link = mysql_connect("twicky.com.mx", "db_esteban", "db_esteban")
 			or die('No se pudo conectar al servidor: ' . mysql_error());
 									
-		mysql_select_db("midb") or die('No se pudo seleccionar la base de datos');
+		mysql_select_db("db_esteban") or die('No se pudo seleccionar la base de datos');
 	}
 	
 	public function dbquery($query)
