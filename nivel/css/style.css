@@ -1,0 +1,342 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+*
+{
+    /*font-family: 'Roboto', Times, serif;*/
+    font-family: 'Press Start 2P', cursive;
+    margin:0%;
+    padding:0%;
+}
+
+body
+{
+    
+    /*color:red;*/
+    background:#2c3e50;
+}
+.title
+{
+    font-size: 20px;
+    text-align: center;
+    padding:1%;
+    background:#2c3e50;
+    clear: both;
+    box-sizing:border-box;
+}
+.GUI
+{
+    float:left;
+    padding:0px;
+    margin:0px;
+    
+    box-sizing: border-box;
+
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(0,0,0,0.75);
+    box-shadow:         0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+
+
+#pgb-render
+{
+    margin-top:10px;
+    width: 100%;
+    padding:1%;
+    box-sizing: border-box;
+}
+
+
+.viewport
+{
+    color:red;
+    background-color: rgba(30, 110, 106, 0.5);
+    text-align: center;
+}
+
+.controles
+{
+    text-align: center;
+    background-color: rgba(30, 110, 106, 0.5);
+    top:0%;
+    width:100%;
+    float:left;
+    
+}
+.controles-b
+{
+    text-align: center;
+    background-color: rgba(30, 110, 106, 0.5);
+    bottom:0%;
+    width:100%;
+    float:left;
+    
+}
+.canvas-GUI
+{
+    
+    float:left;
+    z-index: 1;
+    position: absolute;
+    width:100%;
+    height: 100%;
+    color:white;
+    background-color: rgba(2, 71, 28, 0.0);
+    
+}
+.canvas-GUI > div
+{ 
+    
+    float: left;
+    background-color:rgba(100, 0, 0, 0.0);
+    /*background-color:#2c3e50;*/
+}
+#cvP0,.cvP0
+{
+    position: absolute;
+    top:0%;
+    left:0%;
+}
+#cvP1,.cvP1
+{
+    position: absolute;
+    top:0%;
+    right:0%;
+}
+#cvP2,.cvP2
+{
+    position: absolute;
+    bottom:0%;
+    left:0%;
+}
+#cvP3,.cvP3
+{
+    position: absolute;
+    bottom:0%;
+    right:0%;
+}
+.quad-shadow
+{
+    background-color: rgba(44, 62, 80, 0.8);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 30px;
+    font-weight: 900;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(0,0,0,0.75);
+    box-shadow:         0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+.lugar
+{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 30px;
+    font-weight: 900;
+    padding: 2%;
+    margin-top:4%;
+    margin-left:2%;
+    background-color: rgba(44, 62, 80, 0.8);
+    width:20%;
+    display:inline-block;
+    box-sizing: border-box;
+        
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(0,0,0,0.75);
+    box-shadow:         0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+.velocimetro
+{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    padding: 2%;
+    margin:2%;
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    box-sizing: border-box;
+}
+.estatus-player
+{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 50px;
+    position: absolute;
+    padding: 1%;
+    top:50%;
+    /*left:50%;*/
+    /*margin-left:auto;*/
+    text-align: center;
+    left:0px;
+    width:100%;
+    box-sizing: border-box;
+    /*right:50%;*/
+    background-color: rgba(44, 62, 80, 0.8);
+
+    animation-duration: 1s;
+    animation-name: slidein;
+    /*animation-iteration-count: infinite;*/
+    
+}
+@keyframes slidein {
+    from {
+      transform:scale(0);
+    }
+  
+    to {
+        transform:scale(1);
+    }
+  }
+.name-player
+{
+    font-size: 20px;
+    position: absolute;
+    top:0px;
+    right: 0%;
+    padding: 1%;
+    margin-top:4%;
+    margin-right:2%;
+    background-color: rgba(44, 62, 80, 0.8);
+    width:25%;
+}
+.contador-cristales
+{
+    
+    font-size: 10px;
+    position: absolute;
+    bottom:0px;
+    right: 0%;
+    padding: 2%;
+    box-sizing: border-box;
+    margin-bottom:2%;
+    margin-right:2%;
+    background-color: rgba(44, 62, 80, 0.8);
+    width:10%;
+    display:table;
+}
+.contador-cristales > img
+{
+    width:100%;
+    
+}
+.contador-cristales *
+{
+    font-family: 'Press Start 2P', cursive;
+    display:table-cell;
+    vertical-align: middle;
+}
+.barra-progreso
+{
+    font-size: 10px;
+    position: absolute;
+    width:100%;
+    top:0px;
+    left:0px;
+    text-align: center;
+    padding: 1%;
+    box-sizing: border-box;
+
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: inset 0px 0px 250px 50px rgba(44, 62, 80,0.75);
+    -moz-box-shadow: inset 0px 0px 250px 50px rgba(44, 62, 80,0.75);
+    box-shadow: inset 0px 0px 250px 50px rgba(44, 62, 80,0.75);
+}
+.progreso-carrera
+{
+    position: absolute;
+    height: 2.5%;
+    top:calc(50% - (2.5%/2));
+    width:100%;
+    z-index:5;
+    
+}
+.places
+{
+    
+    top:6%;
+    left:0px;
+    background-color: rgba(0, 0, 0, 0.0);
+    width:32%;
+    position:absolute;
+    overflow: hidden;
+}
+.places *
+{
+    font-size: 10px;
+    padding:0.5%;
+}
+.quad-place
+{
+    width:60%;
+    box-sizing: border-box;
+}
+
+.q-place-00
+{
+    width:100%;  
+    padding-top:4%; 
+    padding-bottom:4%; 
+}
+
+.quad-place .lugar
+{
+    width:30%;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.0);
+    -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0,0.0);
+    -moz-box-shadow:    0px 0px 0px 0px rgba(0, 0, 0,0.0);
+    box-shadow:         0px 0px 0px 0px rgba(0, 0, 0,0.0);
+}
+.quad-place .place-00
+{
+    font-size: 22px;
+    width:35%;
+}
+.quad-place .name-player-00
+{
+    font-size: 16px;
+}
+.quad-place .name-player
+{
+    /*top:0px;
+    right:0px;
+    margin:0px;
+    position: absolute;*/
+    position:relative;
+    width:65%;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.0);
+    -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0,0.0);
+    -moz-box-shadow:    0px 0px 0px 0px rgba(0, 0, 0,0.0);
+    box-shadow:         0px 0px 0px 0px rgba(0, 0, 0,0.0);
+}
+
+/*
+
+.controles-player2
+{
+    text-align: center;
+    background-color: springgreen;
+    top:0%;
+    width:100%;
+    float:left;
+}
+.controles-player3
+{
+    text-align: center;
+    background-color: slateblue;
+    top:0%;
+    width:100%;
+    float:left;
+    
+}
+.controles-player4
+{
+    text-align: center;
+    background-color: sienna;
+    top:0%;
+    width:100%;
+    float:left;
+    
+}*/
+
+
+@media only screen and (max-width: 500px) {
+   
+}
+

@@ -1,6 +1,10 @@
 function render() {
 
     total = requestAnimationFrame(render);
+
+    var skysphere = scene.getObjectByName("skysphere");
+    skysphere.rotation.y += THREE.Math.degToRad(0.1);
+
     if (total <= 200) {
 
         $("#cargando").text("Cargando..." + (total / 2) + "%");
@@ -26,14 +30,20 @@ function render() {
             if(jugador[i].forwardLimit < 0)
                 $("#velocimetro-0"+i).text("Reverse");
             else
-                $("#velocimetro-0"+i).text((jugador[i].forwardLimit/2) + " Km/h");
+                $("#velocimetro-0"+i).text((jugador[i].forwardLimit/2).toFixed(0) + " Km/h");
             
             $("#name-player-0"+i).text(jugador[i].name);
 
             if(jugador[i].progreso <= 100)
                 jugador[i].progreso = ((jugador[i].camPlayer.position.z/final)*100).toFixed(2);
             
-            $("#progreso-0"+i).text(jugador[i].progreso + "%");
+            var posicion = "<br>[" +
+                jugador[i].camPlayer.position.x + "," +
+                jugador[i].camPlayer.position.y + "," +
+                jugador[i].camPlayer.position.z + "]" +
+                "<br>"
+                ;
+            $("#progreso-0"+i).html(jugador[i].progreso + "% " + posicion);
             $("#total-cristales-0"+i).text(jugador[i].totalCristales);
             
             level_leaderboard = ordenar();
