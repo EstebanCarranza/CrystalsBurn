@@ -37,7 +37,8 @@
 			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[2]);
 			new auto("assets/cars/bmw/", "bmw_m3_gtr.obj", "bmw_m3_gtr.mtl", jugador[3]);
 			
-			
+			for(var i= 0; i < limites.length; i++)
+				scene.add(limites[i]);
 			//debugger;
 			/*
 			obj2 = obj.clone();
@@ -97,7 +98,7 @@
 			//cargar_cajas();
 			//cargar_carro(0, jugador[0]);
 			init();
-			nivel_02(1);
+			fn_escenarios(1);
 			//crear_llantas();
 
 			document.addEventListener('keydown', onKeyDown);

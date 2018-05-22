@@ -23,10 +23,51 @@ function nivel_01()
     crear_arboles();
     crear_montanias();
 }
-function nivel_02(id)
+function fn_escenarios(id)
 {
+    //<>LIMITES DEL ESCENARIO******************************************************
+    var lim_centro = new THREE.BoxGeometry(400,100,2700);
+    var material = new THREE.MeshLambertMaterial(
+        {
+            color:new THREE.Color(0,1,0)
+            //wireframe:true
+        }
+    );
+    limites[0] = new THREE.Mesh(lim_centro, material);
+    limites[0].position.set(-290, 0, -1100);
 
+    var lim_orilla_01 = new THREE.BoxGeometry(10,100,3500);
     
+    limites[1] = new THREE.Mesh(lim_orilla_01, material);
+    limites[1].position.set(80,0,-1100);
+    
+    limites[2] = limites[1].clone();
+    limites[2].position.set(-690,0, -1100);
+
+    limites[3] = limites[1].clone();
+    limites[3].rotation.set(0,THREE.Math.degToRad(90),0);
+    limites[3].position.set(0,0,500);
+
+    limites[4] = limites[1].clone();
+    limites[4].rotation.set(0,THREE.Math.degToRad(90),0);
+    limites[4].position.set(0,0,-2650);
+        
+    //</>LIMITES DEL ESCENARIO******************************************************
+    /*loadOBJWithMTL("assets/ambient/sky/", "skysphere.obj", "skysphere.mtl", (objetoCargado) => 
+	{
+    
+        objetoCargado.scale.set (nivel[id].skysphere, nivel[id].skysphere, nivel[id].skysphere);
+		objetoCargado.position.set(-290,0,-1284);
+		
+		var i = 0;
+		sky[i] = objetoCargado.clone();
+		sky[i].name ="skysphere";
+		scene.add(sky[i]);
+		
+		isWorldReady.push(true);
+    });*/
+    
+
     //SKYSPHERE **********************************************************************************
     loadOBJWithMTL("assets/ambient/sky/", "skysphere.obj", "skysphere.mtl", (objetoCargado) => 
 	{
@@ -57,21 +98,54 @@ function nivel_02(id)
     loadOBJWithMTL("assets/maps/cristal/", "crystal.obj", "crystal.mtl", (objetoCargado) => 
 	{
     
-        objetoCargado.scale.set (0.5,0.5,0.5);
-        objetoCargado.position.set(0,1,-100);
-		objetoCargado.name = "crystal";
-		scene.add(objetoCargado);
-		
+        var cPos = new MinMaxPosition(
+            new THREE.Vector3(50, 10, 380),
+            new THREE.Vector3(-50, 10, -2500)  
+        );
+        var total_crystals = 40;
+
+        for(var i = 0; i < total_crystals; i++)
+        {
+            //cristales[i] = new obj_crystals();
+            
+            cristales[i] = objetoCargado.clone();
+            cristales[i].name = "cristal_" + i;
+            cristales[i].tomado = false;
+            cristales[i].position.set(
+                Math.floor(Math.random() * (cPos.Max.x - cPos.Min.x)) + cPos.Min.x,
+                1,
+                Math.floor(Math.random() * (cPos.Max.z - cPos.Min.z)) + cPos.Min.z);
+            cristales[i].scale.set(0.5,0.5,0.5);
+            scene.add(cristales[i]);
+        }
+
+
 		isWorldReady.push(true);
 	});
    //SPEEDUP ******************************************************************************
    loadOBJWithMTL("assets/maps/speedUp/", "speedUp.obj", "speedUp.mtl", (objetoCargado) => 
    {
-   
-       objetoCargado.scale.set (1,1,1);
-       objetoCargado.position.set(0,1.8,-50);
-       objetoCargado.name = "speedUp";
-       scene.add(objetoCargado);
+
+       var cPos = new MinMaxPosition(
+        new THREE.Vector3(50, 10, 380),
+        new THREE.Vector3(-50, 10, -2500)  
+         );
+        var total_speedUP = 10;
+
+        for(var i = 0; i < total_speedUP; i++)
+        {
+            //cristales[i] = new obj_crystals();
+            
+            speedUP[i] = objetoCargado.clone();
+            speedUP[i].name = "speedUp_" + i;
+            speedUP[i].tomado = false;
+            speedUP[i].position.set(
+                Math.floor(Math.random() * (cPos.Max.x - cPos.Min.x)) + cPos.Min.x,
+                2,
+                Math.floor(Math.random() * (cPos.Max.z - cPos.Min.z)) + cPos.Min.z);
+                speedUP[i].scale.set(1,1,1);
+            scene.add(speedUP[i]);
+        }
        
        isWorldReady.push(true);
    });

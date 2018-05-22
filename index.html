@@ -6,10 +6,33 @@
         <title>Crystal Burns</title>
         <script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
         <link rel="stylesheet" type="text/css" href="css/menu-principal.css">
+         <!-- HTML2CANVAS -->
+    <script src="js/html2canvas.js"></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
      <script>
+
+    
+        function getScreen() {
+            //var caption = $('#caption-input').val();
+            $("#caption-text").html("");
+            $("#panel").hide();
+            html2canvas(document.body, {
+                dpi: 192,
+                onrendered: function(canvas) {
+                    $("#blank").attr('href', canvas.toDataURL("image/png"));
+                    $("#blank").attr('download', "image" + '.png');
+                    $("#blank")[0].click();
+                }
+            });
+        }
+    
+
+
         $(document).ready(function()
         {
+                $(".take-screenshot").click(function(){
+                        getScreen();
+                });
                 $("#mnuJugadores").hide();
                 $("#btnIrMnuJugadores").click(function(){
                         $("#mnuPrincipal").hide();
@@ -128,6 +151,8 @@
                         <div class="fb-like" data-href="https://www.facebook.com/twicky.com.mx/" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>
                         <br>
                         <a class="link" href="http://twicky.com.mx/crystal">¡También visitanos en twicky!</a>
+                        <button class="take-screenshot">Tomar captura</button>
+                        <a href="" id="blank"></a>
                 </div>
                 <div id="mnuJugadores" class="section">    
                                 <img class="banner" src="src/banner_02.png">             
@@ -144,7 +169,9 @@
                                 <button id="btnIrMnuPrincipal" class="btn" type="button">Regresar</button>
                                 <!--<button id="empezarJuego" class="btn" type="button">Empezar el juego</button>-->
                                 <input type="submit" class="btn" value="Empezar juego"/>
+                                
                         </form>
+                        <button class="take-screenshot">Tomar captura</button>
                         </div>
                 </div>
         </div>

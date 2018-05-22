@@ -1,76 +1,30 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Pruebas</title>
-        <script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/menu-principal.css">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
-     <script>
-        $(document).ready(function()
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="js/html2canvas.js"></script>
+  <script type="text/javascript" src="js/html2canvas.min.js"></script>
+<!--  <script type="text/javascript"  src=""></script>-->
+
+
+  <script>
+          $(document).ready(function()
         {
-                $("#mnuJugadores").hide();
-                $("#btnIrMnuJugadores").click(function(){
-                        $("#mnuPrincipal").hide();
-                        $("#mnuJugadores").show();
+                html2canvas(document.querySelector("#capture")).then(canvas => {
+                document.body.appendChild(canvas)
                 });
-                $("#btnIrMnuPrincipal").click(function(){
-                        $("#mnuJugadores").hide();
-                        $("#mnuPrincipal").show();
-                        
-                });
+                
+     
         });
-     </script>
+  </script>
 </head>
- <body> 
-        <div id="menu" class="menu">
-                <div id="mnuPrincipal" class="section">
-                        <img class="banner" src="src/banner_02.png">
-                        <div class="leaderboard">
-                                <br>
-                                <div class="ldb-title" style="font-size:25px;">Nombre de la ultima carrera</div>
-                                <div class="ldb-title">
-                                        <button class="btn angle"><i class="fas fa-angle-left"></i></button>
-                                        <div class="ldb-title-desc"> Puente </div>
-                                        <button class="btn angle"><i class="fas fa-angle-right"></i></button> 
-                                </div>
-                                <table class="ldb-table">
-                                        <thead>
-                                                <tr>
-                                                        <th class="ldb-h">Cristales</th>
-                                                        <th class="ldb-h">Jugador</th>
-                                                        <th class="ldb-h">Posición</th>
-                                                </tr>
-                                        </thead>
-                                        <tbody>
-                                                <tr><td>10</td><td>Player1</td><td>1</td></tr>
-                                                <tr><td>10</td><td>Player2</td><td>3</td></tr>
-                                                <tr><td>10</td><td>Player3</td><td>2</td></tr>
-                                                <tr><td>10</td><td>Player4</td><td>4</td></tr>
-                                        
-                                        </tbody>
-                                </table>
-                        </div>
-                        <button id="btnIrMnuJugadores" class="btn" type="button">Empezar el juego</button>
-                        <br>
-                        <label id="cargando">Cargando...</label>
-                        <progress id="pgb-render" value="0" max="200"></progress>
-                </div>
-                <div id="mnuJugadores" class="section">                 
-                        <div class="leaderboard">
-                                        <br>
-                                <div class="ldb-title" style="font-size:25px; ">Escribe los nombres de los jugadores y la carrera</div>
-                                <br>
-                                <input class="input carrera" id="nombre-carrera" placeholder="Nombre de la carrera"/>
-                                <input class="input" id="nombre-p1" placeholder="Player 1"/>
-                                <input class="input" id="nombre-p2" placeholder="Player 2"/>
-                                <input class="input" id="nombre-p3" placeholder="Player 3"/>
-                                <input class="input" id="nombre-p4" placeholder="Player 4"/>
-                                <button id="btnIrMnuPrincipal" class="btn" type="button">Regresar</button>
-                                <button id="empezarJuego" class="btn" type="button">Empezar el juego</button>
-                        </div>
-                </div>
-        </div>
+<body>
+                <div id="capture" style="padding: 10px; background: #f5da55">
+                                <h4 style="color: #000; ">Hello world!</h4>
+                            </div>
 </body>
 </html>

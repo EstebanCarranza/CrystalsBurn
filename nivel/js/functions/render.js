@@ -3,6 +3,7 @@ function render() {
     total = requestAnimationFrame(render);
 
     var skysphere = scene.getObjectByName("skysphere");
+    if(skysphere != undefined)
     skysphere.rotation.y += THREE.Math.degToRad(0.1);
 
     if (total <= 200) {
@@ -30,7 +31,7 @@ function render() {
             if(jugador[i].forwardLimit < 0)
                 $("#velocimetro-0"+i).text("Reverse");
             else
-                $("#velocimetro-0"+i).text((jugador[i].forwardLimit/2).toFixed(0) + " Km/h");
+                $("#velocimetro-0"+i).text((jugador[i].forwardLimit).toFixed(0) + " Km/h");
             
             $("#name-player-0"+i).text(jugador[i].name);
 
@@ -51,44 +52,7 @@ function render() {
             
         }
 
-        for (var j = 0; j < players; j++)
-            for (var i = 0; i < jugador[j].rayos.length; i++) {
-                //Param1: desde donde lanzamos el rayo (vector)
-                //Param2: hacia donde (direccion del vector)
-
-                jugador[j].raycaster.set(jugador[j].camPlayer.position, jugador[j].rayos[i]);
-
-                //Verificamos si existe la colisión
-                //Param1: Objeto(s) "colisionables"
-                //Param2: Si queremos validar la colisión con los hijos 
-                /*
-                    para objetos
-                        var colisiones = raycaster.intersectObject(objeto);
-                    para arreglos
-                        var colisiones = raycaster.intersectObjects(objetosConColision, false);
-
-                    para colision con hijos
-                    var colisiones = raycaster.intersectObjects(objetosConColision, true);
-
-                */
-                var colisiones = jugador[j].raycaster.intersectObjects(objetosConColision, true);
-
-                //si el arreglo es mayor a cero entonces si hay colision
-                if (colisiones.length > 0 && colisiones[0].distance < 1) {
-                    jugador[j].colision = true;
-                    console.log("player" + j + " colisionando " + jugador[j].colision);
-
-                    //jugador[j].camPlayer.translateZ(-jugador[j].forwardLimit * deltaTime);
-                    //jugador[j].forward = jugador[j].forwardLimit;
-                    
-
-                }
-                else
-                {
-                    jugador[j].colision = false;
-                    //console.log("player" + j + " colisionando " + jugador[j].colision);
-                }
-            }
+        colsion_principales(true);
         for (var i = 0; i < players; i++) {
             jugador[i].camPlayer.rotation.y += jugador[i].yaw * deltaTime;
             jugador[i].camPlayer.translateZ(jugador[i].forward * deltaTime);
