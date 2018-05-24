@@ -1,0 +1,128 @@
+<html>
+<head>
+  <title>Your Website Title</title>
+  <script src="js/html2canvas.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+  <script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>  
+  <link rel="stylesheet" type="text/css" href="css/menu-principal.css">
+  <!-- You can use Open Graph tags to customize link previews.
+    Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
+  <meta property="og:url"           content="http://games.twicky.com.mx/CrystalBurn" />
+  <meta property="og:type"          content="website" />
+  <meta property="og:title"         content="¡Twicky Games!!" />
+  <meta property="og:description"   content="Estoy jugando CrystalBurn" />
+  <meta property="og:image"         content="http://games.twicky.com.mx/CrystalBurn/src/crystal.png" />
+  <script>
+  
+        
+        $(document).ready(function()
+        {
+            function getScreen() {
+            //var caption = $('#caption-input').val();
+            //$("#caption-text").html("");
+            //$("#panel").hide();
+            html2canvas(document.body, {
+                dpi: 192,
+                onrendered: function(canvas) {
+/*
+                    $("#blank").attr('href', canvas.toDataURL("image/png"));
+                    $("#blank").attr('download', "image" + '.png');
+                    $("#blank")[0].click();
+                    */
+                    $("#formulario").html("<img src='"+canvas.toDataURL("image/png")+"'/>");
+                   // $("#btnShare").attr("data-href",  (canvas.toDataURL("image/png")));
+                }
+            });
+        }
+
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = 'https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v3.0&appId=1662036530510889&autoLogAppEvents=1';
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+            $(".take-screenshot").click(function(){
+                getScreen();
+            });
+        
+            $(".send-picture-to-server").click(function()
+            {
+                    
+                var formData = new FormData($("#formulario")[0]);
+                var ruta = "imagen-ajax.php";
+                $.ajax({
+                    url: ruta,
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(datos)
+                    {
+                        $("#respuesta").html(datos);
+                    }
+            
+                });
+            });
+        });
+  </script>
+</head>
+<body>
+
+        <div id="fb-root"></div>
+        <div id="btnShare" class="fb-share-button" data-href="http://games.twicky.com.mx/CrystalBurn/src/crystal.png" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgames.twicky.com.mx%2FCrystalBurn%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
+   
+
+<div id="menu" class="menu">
+        <div id="mnuPrincipal" class="section">
+                <img class="banner" src="src/banner_02.png">
+                <div class="leaderboard">
+                        <button class="take-screenshot">Tomar captura</button>
+                        <br>
+                        <div class="ldb-title" style="font-size:25px;">Nombre de la ultima carrera</div>
+                        <div class="ldb-title">
+                                <button id="carreraSig" class="btn angle"><i class="fas fa-angle-left"></i></button>
+                                <div class="ldb-title-desc" id="nombreCarrera"> Puente </div>
+                                <button id="carreraAnt" class="btn angle"><i class="fas fa-angle-right"></i></button> 
+                        </div>
+                        <table class="ldb-table">
+                                <thead>
+                                        <tr>
+                                                <th class="ldb-h">Cristales</th>
+                                                <th class="ldb-h">Jugador</th>
+                                                <th class="ldb-h">Posición</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        <tr><td id="criP1">10</td><td id="nomP1">Player1</td><td id="posP1">1</td></tr>
+                                        <tr><td id="criP2">10</td><td id="nomP2">Player2</td><td id="posP2">3</td></tr>
+                                        <tr><td id="criP3">10</td><td id="nomP3">Player3</td><td id="posP3">2</td></tr>
+                                        <tr><td id="criP4">10</td><td id="nomP4">Player4</td><td id="posP4">4</td></tr>
+                                
+                                </tbody>
+                        </table>
+                </div>
+                <button id="btnIrMnuJugadores" class="btn" type="button">Empezar el juego</button>
+                <br>
+                <br>
+                <div id="fb-root"></div>
+                <script>(function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = 'https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v2.12&appId=1125127617525103&autoLogAppEvents=1';
+                fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));</script>
+                <div class="fb-like" data-href="https://www.facebook.com/twicky.com.mx/" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>
+                <br>
+                <a class="link" href="http://twicky.com.mx/crystal">¡También visitanos en twicky!</a>
+                 <div id="formulario"></div>
+
+        </div>
+        
+               
+            
+        
+</body>
+</html>

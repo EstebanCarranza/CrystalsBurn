@@ -1,4 +1,5 @@
-
+			
+		
 		jugador[0] = new Jugador(0, movement, velocity,
 			translate,
 			scale,

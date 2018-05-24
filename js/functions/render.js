@@ -64,9 +64,15 @@ function render() {
         
     }
 
+    
+
     //debugger;
     for (var i = 0; i < players; i++)
+    {
+        //composer(i);
         jugador[i].viewport.render(scene, jugador[i].camPlayer);
+    }
+        
 
     /*if(jugador[3].viewport.render!=null)
         $("#test-00").text("OK");*/

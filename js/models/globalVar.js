@@ -1,5 +1,6 @@
 var scene;
 		var renderer;
+		var composerPlayer = [];
 		//var viewports = [];
 		//var camPlayers = [];
 		//NECESARIOS 
