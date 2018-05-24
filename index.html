@@ -9,9 +9,12 @@
          <!-- HTML2CANVAS -->
     <script src="js/html2canvas.js"></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+        <script src="https://connect.facebook.net/en_US/sdk.js"></script>
+        <script src="js/facebook.js"></script>
      <script>
 
-    
+        
+
         function getScreen() {
             //var caption = $('#caption-input').val();
             $("#caption-text").html("");
@@ -19,9 +22,12 @@
             html2canvas(document.body, {
                 dpi: 192,
                 onrendered: function(canvas) {
+/*
                     $("#blank").attr('href', canvas.toDataURL("image/png"));
                     $("#blank").attr('download', "image" + '.png');
                     $("#blank")[0].click();
+                    */
+                    $(".image-screen").html("<img src='"+canvas.toDataURL("image/png")+"'/>");
                 }
             });
         }
@@ -30,6 +36,13 @@
 
         $(document).ready(function()
         {
+
+               
+
+
+                
+
+
                 $(".take-screenshot").click(function(){
                         getScreen();
                 });
@@ -153,6 +166,28 @@
                         <a class="link" href="http://twicky.com.mx/crystal">¡También visitanos en twicky!</a>
                         <button class="take-screenshot">Tomar captura</button>
                         <a href="" id="blank"></a>
+                        
+                        <div class="image-screen"></div>
+
+
+                        <div class="page-header">
+                                <h1>Share Dialog</h1>
+                              </div>
+                              
+                              <p>Click the button below to trigger a Share Dialog</p>
+                              
+                              <div id="shareBtn" class="btn btn-success clearfix">Share</div>
+                              
+                              <p style="margin-top: 50px">
+                                <hr />
+                                <a class="btn btn-small"  href="https://developers.facebook.com/docs/sharing/reference/share-dialog">Share Dialog Documentation</a>
+                              </p>
+
+
+
+
+
+
                 </div>
                 <div id="mnuJugadores" class="section">    
                                 <img class="banner" src="src/banner_02.png">             
