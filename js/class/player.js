@@ -31,7 +31,9 @@ class Jugador {
 				new THREE.Vector3(1, 0, 0),
 				new THREE.Vector3(-1, 0, 0),
 				new THREE.Vector3(0, 0, 1),
-				new THREE.Vector3(0, 0, -1)
+				new THREE.Vector3(0, 0, -1),
+				new THREE.Vector3(0, 1, 0),
+				new THREE.Vector3(0, -1, 0)
 			];
 		this.raycaster = new THREE.Raycaster();
 
@@ -172,10 +174,10 @@ function xInputPlayer(IP)
 		if (jugador[IP].inputXpad.A[2] >= (jugador[IP].inputXpad.sensibilidad * -1))
 			jugador[IP].inputXpad.A[2] -= 1;
 		
-
-		//mover camara hacia delante
-		//
 */
+		
+		//
+
 		//Deshabilitar input del control para evitar que se quede presionado
 		jugador[IP].inputXpad.A[1] = false;
 		if(carrera_iniciada)

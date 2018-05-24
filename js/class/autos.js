@@ -1,3 +1,5 @@
+var auto_principal;
+
 class auto
 {
     constructor(pathFOLDER, pathOBJ, pathMTL, jugador)
@@ -33,7 +35,10 @@ class auto
             
             //this.modelo = object.clone();
             object.name= "auto-player-" + jugador.id;
+            auto_principal = object.clone();
+            jugador.modelo = object.clone();
             jugador.camPlayer.add(object);
+            
 
             
             //jugador[0].modelo = object.clone();

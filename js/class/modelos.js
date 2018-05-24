@@ -157,33 +157,25 @@ function crear_montanias()
 		objetoCargado.position.z = 0;
 		
 		
-var total = 40;
-var pos = 210;
-var rot = -90;
-for(var j = 0; j < 2; j++)
-{
-	for(var i = 0; i < total; i++)
-	{
-		montanias[i] = objetoCargado.clone();
-		montanias[i].position.z = -(500*i);
-		
-		montanias[i].rotation.y = THREE.Math.degToRad(rot);
-		montanias[i].position.x = pos;
-		
-		scene.add(montanias[i]);
-	}
-	pos = -210;
-	rot = 90;
- }		
+		var total = 40;
+		var pos = 210;
+		var rot = -90;
+		for(var j = 0; j < 2; j++)
+		{
+			for(var i = 0; i < total; i++)
+			{
+				montanias[i] = objetoCargado.clone();
+				montanias[i].position.z = -(500*i);
+				
+				montanias[i].rotation.y = THREE.Math.degToRad(rot);
+				montanias[i].position.x = pos;
+				
+				scene.add(montanias[i]);
+			}
+			pos = -210;
+			rot = 90;
+		}		
 
-		
-		
-
-
-
-		
-			
-		
 
 		//scene.add(objetoCargado);
 		isWorldReady.push(true);
